@@ -7,5 +7,10 @@ use Illuminate\Http\Request;
 
 class QuoteController extends Controller
 {
-    //
+    public function index(Request $request)
+    {
+        // --- IGNORE ---
+
+       return response()->json(['message' => 'starting point']);
+    }
 }
