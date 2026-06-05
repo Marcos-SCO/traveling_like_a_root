@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use App\Support\TravelerRateCalculator;
 use App\Support\AdditionalsRate;
 
-use App\Enums\AdditionalCoverage;
+use App\Support\AdditionalCoverageRules;
 
 use App\Support\GroupDiscountCalculator;
 
@@ -33,46 +33,26 @@ class QuoteController extends Controller
         return $completeInterval > 5 ? $completeInterval : 5;
     }
 
-    public function warningsForAdditionalAdventure(string $additional, int $age, array $travelerData): array
-    {
-        $addVentureSportEnumValue = mb_strtoupper(AdditionalCoverage::ADVENTURE_SPORTS->value);
-
-        $isAdditionalAdventureSports = mb_strtoupper($additional) === $addVentureSportEnumValue;
-
-        if ($isAdditionalAdventureSports && ($age < 18 || $age > 64)) {
-            return [
-                'can_apply' => false,
-                'warning' =>
-                "{$addVentureSportEnumValue} não aplicada para {$travelerData['name']}: fora da faixa etária permitida (18-64)."
-            ];
-        }
-
-        return [
-            'can_apply' => true,
-            'warning' => null,
-        ];
-    }
-
     public function calculateTravelerIndividualCost($travelerData, $travelZoneDailyRate, $tripStartDate, $chargedDays)
     {
         $tripStartDate = Carbon::parse($tripStartDate);
         $birthDate = Carbon::parse($travelerData['birth_date']);
-        $age = (int) round($birthDate->diffInYears($tripStartDate));
+        $travelerAge = (int) round($birthDate->diffInYears($tripStartDate));
 
         $ageMultiplier = TravelerRateCalculator::ageMultiplier($birthDate, $tripStartDate);
 
         $base = $travelZoneDailyRate * $chargedDays;
         $subTotal = $base * $ageMultiplier;
 
-        $additionals = $travelerData['additionals'] ?? [];
+        $additionalItemsArray = $travelerData['additionals'] ?? [];
         $warnings = [];
         $appliedAdditionals = [];
 
-        foreach ($additionals as $additional) {
+        foreach ($additionalItemsArray as $additionalItem) {
 
-            $adventureSportValidation = $this->warningsForAdditionalAdventure(
-                $additional,
-                $age,
+            $adventureSportValidation = AdditionalCoverageRules::adventureSportsWarnings(
+                $additionalItem,
+                $travelerAge,
                 $travelerData
             );
 
@@ -81,14 +61,14 @@ class QuoteController extends Controller
                 continue;
             }
 
-            $subTotal += AdditionalsRate::cost($additional, $subTotal, $chargedDays);
+            $subTotal += AdditionalsRate::cost($additionalItem, $subTotal, $chargedDays);
 
-            $appliedAdditionals[] = $additional;
+            $appliedAdditionals[] = $additionalItem;
         }
 
         return [
             'name' => $travelerData['name'],
-            'age' => $age,
+            'age' => $travelerAge,
             'subtotal' => $subTotal,
             'applied_additionals' => $appliedAdditionals,
             'warnings' => $warnings
