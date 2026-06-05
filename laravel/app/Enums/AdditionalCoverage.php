@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum AddOns: string
+enum AdditionalCoverage: string
 {
     case BAGGAGE = 'baggage';
     case ADVENTURE_SPORTS = 'adventure_sports';
