@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->unsignedInteger('charged_days');
 
-            $table->decimal('group_discount_percentage', 5, 2)->default(0);
+            $table->decimal('group_discount_percentage', 10, 2)->default(0);
 
             $table->decimal('subtotal_amount', 12, 2);
             $table->decimal('discount_amount', 12, 2)->default(0);
