@@ -5,7 +5,7 @@ namespace App\Support;
 use Carbon\CarbonInterface;
 
 class TravelerRateCalculator {
-    public function ageMultiplier(CarbonInterface $birthDate, CarbonInterface $tripStartDate): float {
+    public static function ageMultiplier(CarbonInterface $birthDate, CarbonInterface $tripStartDate): float {
         $age = $birthDate->diffInYears($tripStartDate);
 
         return match(true) {

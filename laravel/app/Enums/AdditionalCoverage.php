@@ -4,14 +4,14 @@ namespace App\Enums;
 
 enum AdditionalCoverage: string
 {
-    case BAGGAGE = 'baggage';
-    case ADVENTURE_SPORTS = 'adventure_sports';
+    case ADVENTURE_SPORTS = 'esportes_aventura';
+    case BAGGAGE = 'bagagem';
 
     public function label(): string
     {
         return match ($this) {
-            self::BAGGAGE => 'BAGAGEM',
-            self::ADVENTURE_SPORTS => 'ESPORTES_AVENTURA',
+            self::ADVENTURE_SPORTS => 'Esportes de Aventura',
+            self::BAGGAGE => 'Bagagem',
         };
     }
 }
