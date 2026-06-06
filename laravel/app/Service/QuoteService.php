@@ -6,13 +6,14 @@ use Carbon\Carbon;
 use App\Support\TravelerRateCalculator;
 
 use App\Enums\AdditionalCoverage;
+use App\Enums\TravelZone;
 use App\Support\AdditionalsRate;
 
 use App\Support\AdditionalCoverageRules;
 
 class QuoteService
 {
-    public function calculateTravelerIndividualCost($travelerData, $travelZoneDailyRate, $tripStartDate, $chargedDays)
+    public function calculateTravelerIndividualCost(array $travelerData, int $travelZoneDailyRate, \DateTimeInterface $tripStartDate, int $chargedDays): array
     {
         $tripStartDate = Carbon::parse($tripStartDate);
         $birthDate = Carbon::parse($travelerData['birth_date']);

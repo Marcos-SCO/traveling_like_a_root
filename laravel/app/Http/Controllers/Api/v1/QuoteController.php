@@ -12,11 +12,14 @@ use App\Support\CalculateChargedDays;
 use Illuminate\Validation\Rule;
 
 use App\Service\QuoteService;
+use App\Service\TravelerQuoteCalculator;
+
+use Carbon\Carbon;
 
 class QuoteController extends Controller
 {
 
-    public function __construct(private QuoteService $quoteService) {}
+    public function __construct(private QuoteService $quoteService, private TravelerQuoteCalculator $travelerQuoteCalculator) {}
 
     public function index(Request $request)
     {
@@ -45,48 +48,25 @@ class QuoteController extends Controller
         $travelers = $validated['travelers'];
         $travelersCount = count($travelers);
 
-        $startDate = $validated['start_date'];
-        $endDate = $validated['end_date'];
+        $startDate = Carbon::parse($validated['start_date']);
+        $endDate = Carbon::parse($validated['end_date']);
 
         $chargedDays = CalculateChargedDays::getDays($startDate, $endDate);
 
-        $travelersCost = array_map(
-            fn($traveler) => $this->quoteService->calculateTravelerIndividualCost(
-                $traveler,
-                $travelZone->dailyRate(),
-                $startDate,
-                $chargedDays
-            ),
-            $travelers
-        );
+        $travelersCost = $this->travelerQuoteCalculator->travelersCost($travelers, $travelZone, $startDate, $chargedDays);
 
-
-        $totalGroupCost = array_sum(array_map(function ($travelerCost) {
-            return $travelerCost['subtotal'];
-        }, $travelersCost));
+        $totalGroupCost = $this->travelerQuoteCalculator->totalGroupCost($travelersCost);
 
         $groupPercentageDiscount =
             GroupDiscountCalculator::percentage($travelersCount);
 
         $totalEnd = $totalGroupCost - ($totalGroupCost * $groupPercentageDiscount);
 
-        $travelersFormattedData =  array_map(function ($traveler) {
-            return [
-                'name' => $traveler['name'],
-                'age' =>  $traveler['age'],
-                'subtotal' => round($traveler['subtotal'], 2),
-                'applied_additionals' => $traveler['applied_additionals'],
-            ];
-        }, $travelersCost);
+        $travelersFormattedData =
+            $this->travelerQuoteCalculator->travelersFormattedData($travelersCost);
 
-        $filteredWarnings = array_filter(
-            array_map(function ($travelerCost) {
-                return $travelerCost['warnings'] ?? null;
-            }, $travelersCost)
-        );
-        $allWarningMessages = !empty($filteredWarnings)
-            ? array_merge(...array_map('array_values', $filteredWarnings))
-            : [];
+        $allWarningMessages =
+            $this->travelerQuoteCalculator->warningMessages($travelersCost);
 
         $response = [
             'charged_days' => $chargedDays,
