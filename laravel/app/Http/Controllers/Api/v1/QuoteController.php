@@ -15,6 +15,9 @@ use App\Support\AdditionalsRate;
 use App\Support\AdditionalCoverageRules;
 
 use App\Support\GroupDiscountCalculator;
+use App\Support\CalculateChargedDays;
+
+use Illuminate\Validation\Rule;
 
 class QuoteController extends Controller
 {
@@ -23,16 +26,6 @@ class QuoteController extends Controller
         // --- IGNORE ---
 
         return response()->json(['message' => 'starting point']);
-    }
-
-    public function calculateChargedDays($startDate, $endDate)
-    {
-        $start = new \DateTime($startDate);
-        $end = new \DateTime($endDate);
-        $interval = $start->diff($end);
-        $completeInterval = $interval->days + 1;
-
-        return $completeInterval > 5 ? $completeInterval : 5;
     }
 
     public function calculateTravelerIndividualCost($travelerData, $travelZoneDailyRate, $tripStartDate, $chargedDays)
@@ -84,7 +77,7 @@ class QuoteController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'travel_zone'          => 'required|string',
+            'travel_zone'          => ['required', 'string', Rule::Enum(TravelZone::class)],
             'start_date'           => 'required|date',
             'end_date'             => 'required|date',
 
@@ -102,7 +95,7 @@ class QuoteController extends Controller
         $startDate = $validated['start_date'];
         $endDate = $validated['end_date'];
 
-        $chargedDays = $this->calculateChargedDays($startDate, $endDate);
+        $chargedDays = CalculateChargedDays::getDays($startDate, $endDate);
 
         $travelersCost = array_map(
             fn($traveler) => $this->calculateTravelerIndividualCost(
