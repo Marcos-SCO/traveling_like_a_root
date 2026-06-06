@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 use Carbon\Carbon;
 use App\Support\TravelerRateCalculator;
+
+use App\Enums\AdditionalCoverage;
 use App\Support\AdditionalsRate;
 
 use App\Support\AdditionalCoverageRules;
@@ -48,10 +50,14 @@ class QuoteController extends Controller
         $warnings = [];
         $appliedAdditionals = [];
 
-        foreach ($additionalItemsArray as $additionalItem) {
+        foreach ($additionalItemsArray as $additionalIdentifier) {
+
+            $isAValidAdditionalIdentifier = AdditionalCoverage::hasValue(mb_strtolower($additionalIdentifier));
+
+            if (!$isAValidAdditionalIdentifier) continue;
 
             $adventureSportValidation = AdditionalCoverageRules::adventureSportsWarnings(
-                $additionalItem,
+                $additionalIdentifier,
                 $travelerAge,
                 $travelerData
             );
@@ -61,9 +67,9 @@ class QuoteController extends Controller
                 continue;
             }
 
-            $subTotal += AdditionalsRate::cost($additionalItem, $subTotal, $chargedDays);
+            $subTotal += AdditionalsRate::cost($additionalIdentifier, $subTotal, $chargedDays);
 
-            $appliedAdditionals[] = $additionalItem;
+            $appliedAdditionals[] = $additionalIdentifier;
         }
 
         return [
