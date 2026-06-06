@@ -10,6 +10,17 @@ class Traveler extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'quote_id',
+        'name',
+        'birth_date',
+        'age_at_trip',
+        'age_multiplier',
+        'base_amount',
+        'additionals_amount',
+        'subtotal_amount',
+    ];
+
     public function quote()
     {
         return $this->belongsTo(Quote::class);
