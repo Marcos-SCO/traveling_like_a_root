@@ -77,7 +77,7 @@ export default function QuoteForm() {
           Adicionar Viajante
         </button>
 
-        <button type="submit">Calcular Quotação</button>
+        <button type="submit" >Calcular Quotação</button>
       </form>
     </div>
   );

@@ -15,7 +15,7 @@ export default function TravelerForm({
 }: TravelerFormProps) {
   return (
     <div className="border rounded-lg p-4 space-y-4">
-      <h3 className="font-semibold">Traveler #{index + 1}</h3>
+      <h3 className="font-semibold">Viajante #{index + 1}</h3>
 
       <div>
         <label>Nome</label>
@@ -56,7 +56,11 @@ export default function TravelerForm({
         </label>
       </div>
 
-      <Button type="button" onClick={remove} className="text-red-500">
+      <Button
+        type="button"
+        onClick={remove}
+        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+      >
         Remover Viajante
       </Button>
     </div>
