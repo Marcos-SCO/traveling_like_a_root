@@ -11,6 +11,8 @@ use Illuminate\Database\Seeder;
 use App\Enums\AdditionalCoverage;
 use App\Models\TravelerAdditional;
 use App\Service\QuoteService;
+use App\Service\QuotePersistenceService;
+use App\Enums\TravelZone;
 
 class QuoteSeeder extends Seeder
 {
@@ -19,39 +21,71 @@ class QuoteSeeder extends Seeder
      */
     public function run(): void
     {
-        Quote::factory()
-            ->count(30)
-            ->create()
-            ->each(function (Quote $quote) {
+        $quoteService = app(QuoteService::class);
 
-                $travelers = Traveler::factory()
-                    ->count(rand(1, 8))
-                    ->create([
-                        'quote_id' => $quote->id
-                    ]);
+        $quotePersistenceService = app(QuotePersistenceService::class);
 
-                foreach ($travelers as $traveler) {
+        for ($i = 0; $i < 10; $i++) {
 
-                    $allCoverages = collect(AdditionalCoverage::cases());
+            $startDate = fake()
+                ->dateTimeBetween('+1 week', '+6 months');
 
-                    $selected = $allCoverages
-                        ->shuffle()
-                        ->take(rand(0, $allCoverages->count()));
+            $endDate = (clone $startDate)
+                ->modify('+' . rand(3, 8) . ' days');
 
-                    $records = [];
-                    foreach ($selected as $coverage) {
+            $payload = [
+                'travel_zone' => fake()
+                    ->randomElement(TravelZone::cases())
+                    ->value,
 
-                        $records[] = [
-                            'traveler_id' => $traveler->id,
-                            'coverage_code' => $coverage->value,
-                            'amount' => 0,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ];
-                    }
+                'start_date' => $startDate->format('Y-m-d'),
 
-                    TravelerAdditional::insert($records);
-                }
-            });
+                'end_date' => $endDate->format('Y-m-d'),
+
+                'travelers' => [],
+            ];
+
+            $travelersCount = rand(1, 8);
+
+            for ($j = 0; $j < $travelersCount; $j++) {
+
+                $allCoverages = collect(AdditionalCoverage::cases());
+
+                $selectedCoverages = $allCoverages
+                    ->shuffle()
+                    ->take(
+                        rand(
+                            0,
+                            $allCoverages->count()
+                        )
+                    )
+                    ->pluck('value')
+                    ->values()
+                    ->toArray();
+
+                $payload['travelers'][] = [
+                    'name' => fake()->name(),
+
+                    'birth_date' => fake()
+                        ->dateTimeBetween(
+                            '-80 years',
+                            '-1 year'
+                        )
+                        ->format('Y-m-d'),
+
+                    'additionals' => $selectedCoverages,
+                ];
+            }
+
+            $calculatedData =
+                $quoteService->calculateTotal(
+                    $payload
+                );
+
+            $quotePersistenceService->persist(
+                $payload,
+                $calculatedData
+            );
+        }
     }
 }
