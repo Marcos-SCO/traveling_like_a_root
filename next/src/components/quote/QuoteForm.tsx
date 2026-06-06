@@ -31,44 +31,48 @@ export default function QuoteForm() {
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      {/* Travel Zone */}
-      <select {...form.register("travel_zone")}>
-        <option value="NACIONAL">Nacional</option>
-        <option value="AMERICAS">Americas</option>
-        <option value="EUROPA">Europa</option>
-      </select>
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Cotação de viajem</h1>
 
-      {/* Start Date */}
-      <input type="date" {...form.register("start_date")} />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Travel Zone */}
+        <select {...form.register("travel_zone")}>
+          <option value="NACIONAL">Nacional</option>
+          <option value="AMERICAS">Americas</option>
+          <option value="EUROPA">Europa</option>
+        </select>
 
-      {/* End Date */}
-      <input type="date" {...form.register("end_date")} />
+        {/* Start Date */}
+        <input type="date" {...form.register("start_date")} />
 
-      {/* Travelers */}
-      {fields.map((field, index) => (
-        <TravelerForm
-          key={field.id}
-          index={index}
-          remove={() => remove(index)}
-          register={form.register}
-        />
-      ))}
+        {/* End Date */}
+        <input type="date" {...form.register("end_date")} />
 
-      <button
-        type="button"
-        onClick={() =>
-          append({
-            name: "",
-            birth_date: "",
-            additionals: [],
-          })
-        }
-      >
-        Adicionar Viajante
-      </button>
+        {/* Travelers */}
+        {fields.map((field, index) => (
+          <TravelerForm
+            key={field.id}
+            index={index}
+            remove={() => remove(index)}
+            register={form.register}
+          />
+        ))}
 
-      <button type="submit">Calcular Quotação</button>
-    </form>
+        <button
+          type="button"
+          onClick={() =>
+            append({
+              name: "",
+              birth_date: "",
+              additionals: [],
+            })
+          }
+        >
+          Adicionar Viajante
+        </button>
+
+        <button type="submit">Calcular Quotação</button>
+      </form>
+    </div>
   );
 }
