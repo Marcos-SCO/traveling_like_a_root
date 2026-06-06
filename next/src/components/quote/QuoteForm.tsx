@@ -3,6 +3,7 @@ import { quoteSchema } from "@/schemas/quoteSchema";
 import { QuoteRequest } from "@/types/quote";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TravelerForm from "../traveler/TravelerForm";
+import { useQuote } from "@/hooks/useQuote";
 
 export default function QuoteForm() {
   const form = useForm<QuoteRequest>({
@@ -26,8 +27,11 @@ export default function QuoteForm() {
     name: "travelers",
   });
 
-  const onSubmit = (data: QuoteRequest) => {
+  const { submitQuote } = useQuote();
+
+  const onSubmit = async (data: QuoteRequest) => {
     console.log(data);
+    await submitQuote(data);
   };
 
   return (
