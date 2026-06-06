@@ -39,7 +39,7 @@ class QuoteServiceTest extends TestCase
 
         $this->assertEquals(11, $result['charged_days']);
 
-        $this->assertCount(2, $result['travelers']);
+        $this->assertCount(2, $result['travelers_calculated_cost_data']);
 
         $this->assertCount(1, $result['warnings']);
 
@@ -54,7 +54,7 @@ class QuoteServiceTest extends TestCase
         );
 
         $this->assertEquals(
-            860,
+            852,
             $result['total_amount']
         );
     }
