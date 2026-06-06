@@ -6,7 +6,7 @@ use App\Enums\AdditionalCoverage;
 
 class AdditionalCoverageRules
 {
-    public static function adventureSportsWarnings(string $additionalIdentifier, int $travelerAge, array $travelerData): array
+    public static function adventureSportsWarnings(string $additionalIdentifier, int $travelerAge, string $travelerName): array
     {
         $addVentureSportEnumValue = mb_strtoupper(AdditionalCoverage::ADVENTURE_SPORTS->value);
 
@@ -16,7 +16,7 @@ class AdditionalCoverageRules
             return [
                 'can_apply' => false,
                 'warning' =>
-                "{$addVentureSportEnumValue} não aplicada para {$travelerData['name']}: fora da faixa etária permitida (18-64)."
+                "{$addVentureSportEnumValue} não aplicada para {$travelerName}: fora da faixa etária permitida (18-64)."
             ];
         }
 

@@ -30,6 +30,8 @@ class TravelerQuoteCalculator
         $warnings = [];
         $appliedAdditionals = [];
 
+        $travelerName = $travelerData['name'];
+
         foreach ($additionalItemsArray as $additionalIdentifier) {
 
             $isAValidAdditionalIdentifier = AdditionalCoverage::hasValue(mb_strtolower($additionalIdentifier));
@@ -39,7 +41,7 @@ class TravelerQuoteCalculator
             $adventureSportValidation = AdditionalCoverageRules::adventureSportsWarnings(
                 $additionalIdentifier,
                 $travelerAge,
-                $travelerData
+                $travelerName
             );
 
             if (!$adventureSportValidation['can_apply']) {
@@ -53,7 +55,7 @@ class TravelerQuoteCalculator
         }
 
         return [
-            'name' => $travelerData['name'],
+            'name' => $travelerName,
             'age' => $travelerAge,
             'subtotal' => $subTotal,
             'applied_additionals' => $appliedAdditionals,
