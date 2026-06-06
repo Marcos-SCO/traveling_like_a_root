@@ -1,3 +1,5 @@
+"use client";
+
 import { useForm, useFieldArray } from "react-hook-form";
 import { quoteSchema } from "@/schemas/quoteSchema";
 import { QuoteRequest } from "@/types/quote";
