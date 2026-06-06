@@ -19,28 +19,34 @@ class TravelerQuoteCalculator
     {
         $tripStartDate = Carbon::parse($tripStartDate);
         $birthDate = Carbon::parse($travelerData['birth_date']);
-        $travelerAge = (int) round($birthDate->diffInYears($tripStartDate));
+
+        $ageAtTrip = (int) round($birthDate->diffInYears($tripStartDate));
 
         $ageMultiplier = TravelerRateCalculator::ageMultiplier($birthDate, $tripStartDate);
 
-        $base = $travelZoneDailyRate * $chargedDays;
-        $subTotal = $base * $ageMultiplier;
+        $baseAmount = $travelZoneDailyRate * $chargedDays;
+        $subTotal = $baseAmount * $ageMultiplier;
+
+        $appliedAdditionalsAmount = 0;
 
         $additionalItemsArray = $travelerData['additionals'] ?? [];
         $warnings = [];
         $appliedAdditionals = [];
 
+
         $travelerName = $travelerData['name'];
 
         foreach ($additionalItemsArray as $additionalIdentifier) {
 
-            $isAValidAdditionalIdentifier = AdditionalCoverage::hasValue(mb_strtolower($additionalIdentifier));
+            $additionalIdentifier = mb_strtolower($additionalIdentifier);
+
+            $isAValidAdditionalIdentifier = AdditionalCoverage::hasValue($additionalIdentifier);
 
             if (!$isAValidAdditionalIdentifier) continue;
 
             $adventureSportValidation = AdditionalCoverageRules::adventureSportsWarnings(
                 $additionalIdentifier,
-                $travelerAge,
+                $ageAtTrip,
                 $travelerName
             );
 
@@ -49,15 +55,26 @@ class TravelerQuoteCalculator
                 continue;
             }
 
-            $subTotal += AdditionalsRate::cost($additionalIdentifier, $subTotal, $chargedDays);
+            $additionalAmount = AdditionalsRate::cost($additionalIdentifier, $subTotal, $chargedDays);
 
-            $appliedAdditionals[] = $additionalIdentifier;
+            $appliedAdditionalsAmount += $additionalAmount;
+
+            $appliedAdditionals[] = [
+                'coverage_code' => $additionalIdentifier,
+                'amount' => $additionalAmount,
+            ];
         }
+
+        $subTotal += $appliedAdditionalsAmount;
 
         return [
             'name' => $travelerName,
-            'age' => $travelerAge,
+            'birth_date' => $travelerData['birth_date'],
+            'age_at_trip' => $ageAtTrip,
+            'age_multiplier' => $ageMultiplier,
+            'base_amount' => $baseAmount,
             'subtotal' => $subTotal,
+            'additionals_amount' => $appliedAdditionalsAmount,
             'applied_additionals' => $appliedAdditionals,
             'warnings' => $warnings
         ];
@@ -86,9 +103,9 @@ class TravelerQuoteCalculator
         return array_map(function ($traveler) {
             return [
                 'name' => $traveler['name'],
-                'age' =>  $traveler['age'],
-                'subtotal' => round($traveler['subtotal'], 2),
-                'applied_additionals' => $traveler['applied_additionals'],
+                'age' =>  $traveler['age_at_trip'],
+                'subtotal' =>  $traveler['subtotal'],
+                'applied_additionals' => array_map(fn($additional) => mb_strtoupper($additional['coverage_code']), $traveler['applied_additionals']),
             ];
         }, $travelersCost);
     }
