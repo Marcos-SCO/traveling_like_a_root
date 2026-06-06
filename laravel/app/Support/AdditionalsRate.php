@@ -23,8 +23,8 @@ class AdditionalsRate
         $additionalRate = self::number($additionalIdentifier);
 
         return match ($additionalIdentifier) {
-            AdditionalCoverage::ADVENTURE_SPORTS => $additionalRate * $subTotal,
-            AdditionalCoverage::BAGGAGE => $additionalRate * $chargedDays,
+            AdditionalCoverage::ADVENTURE_SPORTS->value => $additionalRate * $subTotal,
+            AdditionalCoverage::BAGGAGE->value => $additionalRate * $chargedDays,
             default => 0,
         };
     }
