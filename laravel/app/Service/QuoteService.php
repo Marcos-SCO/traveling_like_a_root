@@ -8,6 +8,8 @@ use App\Enums\TravelZone;
 use App\Support\GroupDiscountCalculator;
 use App\Support\CalculateChargedDays;
 
+use function Laravel\Prompts\number;
+
 class QuoteService
 {
     public function __construct(private TravelerQuoteCalculator $travelerQuoteCalculator) {}
@@ -42,7 +44,7 @@ class QuoteService
             'travelers' => $travelersFormattedData,
             'warnings' =>  $allWarningMessages,
             'group_discount_percentage' => $groupPercentageDiscount * 100,
-            'total_amount' => round($totalEnd, 2),
+            'total_amount' => (int) round($totalEnd, 2),
         ];
     }
 }
