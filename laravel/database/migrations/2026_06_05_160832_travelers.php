@@ -19,7 +19,14 @@ return new class extends Migration
             $table->string('name');
             $table->date('birth_date');
 
-            $table->decimal('base_amount', 12, 2);
+            $table->unsignedTinyInteger('age_at_trip')->default(0);
+            $table->decimal('age_multiplier', 5, 2)->default(1);
+
+            $table->decimal('base_amount', 12, 2)->default(0);
+
+            $table->decimal('additionals_amount', 12, 2)->default(0);
+
+            $table->decimal('subtotal_amount', 12, 2)->default(0);
 
             $table->timestamps();
         });

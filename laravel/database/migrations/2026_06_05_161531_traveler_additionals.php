@@ -16,13 +16,13 @@ return new class extends Migration
 
             $table->foreignId('traveler_id')->constrained()->onDelete('cascade');
 
-            $table->string('additional_code');
+            $table->string('coverage_code');
 
-            $table->decimal('amount', 12, 2);
+            $table->decimal('amount', 12, 2)->default(0);
 
             $table->timestamps();
 
-            $table->unique(['traveler_id', 'additional_code']);
+            $table->unique(['traveler_id', 'coverage_code']);
         });
     }
 
