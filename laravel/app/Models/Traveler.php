@@ -10,4 +10,9 @@ class Traveler extends Model
     {
         return $this->belongsTo(Quote::class);
     }
+
+    public function additionals()
+    {
+        return $this->hasMany(TravelerAdditional::class);
+    }
 }
