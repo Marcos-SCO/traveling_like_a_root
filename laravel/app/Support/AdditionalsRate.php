@@ -7,22 +7,22 @@ use App\Enums\AdditionalCoverage;
 
 class AdditionalsRate
 {
-    public static function number(string $additional): float
+    public static function number(string $additionalIdentifier): float
     {
-        $additional = strtolower($additional);
+        $additionalIdentifier = strtolower($additionalIdentifier);
 
-        return match ($additional) {
-            AdditionalCoverage::ADVENTURE_SPORTS => 0.25,
-            AdditionalCoverage::BAGGAGE => 3,
+        return match ($additionalIdentifier) {
+            AdditionalCoverage::ADVENTURE_SPORTS->value => 0.25,
+            AdditionalCoverage::BAGGAGE->value => 3,
             default => 0,
         };
     }
 
-    public static function cost(string $additional, float $subTotal = 0, int $chargedDays = 0): float
+    public static function cost(string $additionalIdentifier, float $subTotal = 0, int $chargedDays = 0): float
     {
-        $additionalRate = self::number($additional);
+        $additionalRate = self::number($additionalIdentifier);
 
-        return match ($additional) {
+        return match ($additionalIdentifier) {
             AdditionalCoverage::ADVENTURE_SPORTS => $additionalRate * $subTotal,
             AdditionalCoverage::BAGGAGE => $additionalRate * $chargedDays,
             default => 0,
