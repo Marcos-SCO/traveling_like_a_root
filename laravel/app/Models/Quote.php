@@ -16,6 +16,17 @@ class Quote extends Model
         'end_date' => 'date',
     ];
 
+    protected $fillable = [
+        'travel_zone',
+        'start_date',
+        'end_date',
+        'charged_days',
+        'group_discount_percentage',
+        'subtotal_amount',
+        'discount_amount',
+        'total_amount',
+    ];
+
     public function travelers()
     {
         return $this->hasMany(Traveler::class);
