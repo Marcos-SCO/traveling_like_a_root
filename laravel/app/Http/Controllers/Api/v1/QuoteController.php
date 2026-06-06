@@ -88,7 +88,7 @@ class QuoteController extends Controller
             'travelers.*.additionals' => 'nullable|array',
         ]);
 
-        $travelZone = TravelZone::from($validated['travel_zone']);
+        $travelZone = TravelZone::from(mb_strtolower($validated['travel_zone']));
 
         $travelers = $validated['travelers'];
         $travelersCount = count($travelers);

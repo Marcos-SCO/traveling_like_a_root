@@ -4,9 +4,9 @@ namespace App\Enums;
 
 enum TravelZone: string
 {
-    case NATIONAL = 'national';
+    case NATIONAL = 'nacional';
     case AMERICAS = 'americas';
-    case EUROPE = 'europe';
+    case EUROPE = 'europa';
 
     public function dailyRate(): float
     {
