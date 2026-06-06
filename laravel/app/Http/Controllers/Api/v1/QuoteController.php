@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 use App\Service\QuoteService;
-use App\Service\TravelerQuoteCalculator;
 
+use App\Http\Requests\QuoteRequest;
 
 class QuoteController extends Controller
 {
@@ -24,20 +24,9 @@ class QuoteController extends Controller
         return response()->json(['message' => 'starting point']);
     }
 
-    public function store(Request $request)
+    public function store(QuoteRequest $request)
     {
-        $validated = $request->validate([
-            'travel_zone'          => ['required', 'string', Rule::Enum(TravelZone::class)],
-            'start_date'           => 'required|date',
-            'end_date'             => 'required|date',
-
-            'travelers'            => 'required|array|min:1',
-            'travelers.*.name'       => 'required|string|max:255',
-            'travelers.*.birth_date' => 'required|date',
-            'travelers.*.additionals' => 'nullable|array',
-        ]);
-
-        $calculateTotal = $this->quoteService->calculateTotal($validated);
+        $calculateTotal = $this->quoteService->calculateTotal($request->validated());
 
         return response()->json($calculateTotal);
     }
