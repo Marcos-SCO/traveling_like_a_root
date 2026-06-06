@@ -6,20 +6,16 @@ use App\Enums\TravelZone;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Support\GroupDiscountCalculator;
-use App\Support\CalculateChargedDays;
-
 use Illuminate\Validation\Rule;
 
 use App\Service\QuoteService;
 use App\Service\TravelerQuoteCalculator;
 
-use Carbon\Carbon;
 
 class QuoteController extends Controller
 {
 
-    public function __construct(private QuoteService $quoteService, private TravelerQuoteCalculator $travelerQuoteCalculator) {}
+    public function __construct(private QuoteService $quoteService) {}
 
     public function index(Request $request)
     {
@@ -27,8 +23,6 @@ class QuoteController extends Controller
 
         return response()->json(['message' => 'starting point']);
     }
-
-
 
     public function store(Request $request)
     {
@@ -43,39 +37,8 @@ class QuoteController extends Controller
             'travelers.*.additionals' => 'nullable|array',
         ]);
 
-        $travelZone = TravelZone::from(mb_strtolower($validated['travel_zone']));
+        $calculateTotal = $this->quoteService->calculateTotal($validated);
 
-        $travelers = $validated['travelers'];
-        $travelersCount = count($travelers);
-
-        $startDate = Carbon::parse($validated['start_date']);
-        $endDate = Carbon::parse($validated['end_date']);
-
-        $chargedDays = CalculateChargedDays::getDays($startDate, $endDate);
-
-        $travelersCost = $this->travelerQuoteCalculator->travelersCost($travelers, $travelZone, $startDate, $chargedDays);
-
-        $totalGroupCost = $this->travelerQuoteCalculator->totalGroupCost($travelersCost);
-
-        $groupPercentageDiscount =
-            GroupDiscountCalculator::percentage($travelersCount);
-
-        $totalEnd = $totalGroupCost - ($totalGroupCost * $groupPercentageDiscount);
-
-        $travelersFormattedData =
-            $this->travelerQuoteCalculator->travelersFormattedData($travelersCost);
-
-        $allWarningMessages =
-            $this->travelerQuoteCalculator->warningMessages($travelersCost);
-
-        $response = [
-            'charged_days' => $chargedDays,
-            'travelers' => $travelersFormattedData,
-            'warnings' =>  $allWarningMessages,
-            'group_discount_percentage' => $groupPercentageDiscount * 100,
-            'total_amount' => round($totalEnd, 2),
-        ];
-
-        return response()->json($response);
+        return response()->json($calculateTotal);
     }
 }

@@ -3,59 +3,46 @@
 namespace App\Service;
 
 use Carbon\Carbon;
-use App\Support\TravelerRateCalculator;
-
-use App\Enums\AdditionalCoverage;
 use App\Enums\TravelZone;
-use App\Support\AdditionalsRate;
 
-use App\Support\AdditionalCoverageRules;
+use App\Support\GroupDiscountCalculator;
+use App\Support\CalculateChargedDays;
 
 class QuoteService
 {
-    public function calculateTravelerIndividualCost(array $travelerData, int $travelZoneDailyRate, \DateTimeInterface $tripStartDate, int $chargedDays): array
-    {
-        $tripStartDate = Carbon::parse($tripStartDate);
-        $birthDate = Carbon::parse($travelerData['birth_date']);
-        $travelerAge = (int) round($birthDate->diffInYears($tripStartDate));
+    public function __construct(private TravelerQuoteCalculator $travelerQuoteCalculator) {}
 
-        $ageMultiplier = TravelerRateCalculator::ageMultiplier($birthDate, $tripStartDate);
+    public function calculateTotal(array $data): array {
+        $travelZone = TravelZone::from(mb_strtolower($data['travel_zone']));
 
-        $base = $travelZoneDailyRate * $chargedDays;
-        $subTotal = $base * $ageMultiplier;
+        $travelers = $data['travelers'];
+        $travelersCount = count($travelers);
 
-        $additionalItemsArray = $travelerData['additionals'] ?? [];
-        $warnings = [];
-        $appliedAdditionals = [];
+        $groupPercentageDiscount = GroupDiscountCalculator::percentage($travelersCount);
 
-        foreach ($additionalItemsArray as $additionalIdentifier) {
+        $startDate = Carbon::parse($data['start_date']);
+        $endDate = Carbon::parse($data['end_date']);
 
-            $isAValidAdditionalIdentifier = AdditionalCoverage::hasValue(mb_strtolower($additionalIdentifier));
+        $chargedDays = CalculateChargedDays::getDays($startDate, $endDate);
 
-            if (!$isAValidAdditionalIdentifier) continue;
+        $travelersCost = $this->travelerQuoteCalculator->travelersCost($travelers, $travelZone, $startDate, $chargedDays);
 
-            $adventureSportValidation = AdditionalCoverageRules::adventureSportsWarnings(
-                $additionalIdentifier,
-                $travelerAge,
-                $travelerData
-            );
+        $totalGroupCost = $this->travelerQuoteCalculator->totalGroupCost($travelersCost);
 
-            if (!$adventureSportValidation['can_apply']) {
-                $warnings[] = $adventureSportValidation['warning'];
-                continue;
-            }
+        $totalEnd = $totalGroupCost - ($totalGroupCost * $groupPercentageDiscount);
 
-            $subTotal += AdditionalsRate::cost($additionalIdentifier, $subTotal, $chargedDays);
+        $travelersFormattedData =
+            $this->travelerQuoteCalculator->travelersFormattedData($travelersCost);
 
-            $appliedAdditionals[] = $additionalIdentifier;
-        }
+        $allWarningMessages =
+            $this->travelerQuoteCalculator->warningMessages($travelersCost);
 
         return [
-            'name' => $travelerData['name'],
-            'age' => $travelerAge,
-            'subtotal' => $subTotal,
-            'applied_additionals' => $appliedAdditionals,
-            'warnings' => $warnings
+            'charged_days' => $chargedDays,
+            'travelers' => $travelersFormattedData,
+            'warnings' =>  $allWarningMessages,
+            'group_discount_percentage' => $groupPercentageDiscount * 100,
+            'total_amount' => round($totalEnd, 2),
         ];
     }
 }
