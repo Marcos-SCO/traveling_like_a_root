@@ -8,8 +8,8 @@ const travelersSchema = z.object({
 
 export const quoteSchema = z.object({
     travel_zone: z.enum([
-        'NATIONAL',
-        'AMERICA',
+        'NACIONAL',
+        'AMERICAS',
         'EUROPA',
     ]),
     start_date: z.string(),
