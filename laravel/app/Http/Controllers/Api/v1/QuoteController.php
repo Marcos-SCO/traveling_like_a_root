@@ -6,21 +6,18 @@ use App\Enums\TravelZone;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use Carbon\Carbon;
-use App\Support\TravelerRateCalculator;
-
-use App\Enums\AdditionalCoverage;
-use App\Support\AdditionalsRate;
-
-use App\Support\AdditionalCoverageRules;
-
 use App\Support\GroupDiscountCalculator;
 use App\Support\CalculateChargedDays;
 
 use Illuminate\Validation\Rule;
 
+use App\Service\QuoteService;
+
 class QuoteController extends Controller
 {
+
+    public function __construct(private QuoteService $quoteService) {}
+
     public function index(Request $request)
     {
         // --- IGNORE ---
@@ -28,51 +25,7 @@ class QuoteController extends Controller
         return response()->json(['message' => 'starting point']);
     }
 
-    public function calculateTravelerIndividualCost($travelerData, $travelZoneDailyRate, $tripStartDate, $chargedDays)
-    {
-        $tripStartDate = Carbon::parse($tripStartDate);
-        $birthDate = Carbon::parse($travelerData['birth_date']);
-        $travelerAge = (int) round($birthDate->diffInYears($tripStartDate));
 
-        $ageMultiplier = TravelerRateCalculator::ageMultiplier($birthDate, $tripStartDate);
-
-        $base = $travelZoneDailyRate * $chargedDays;
-        $subTotal = $base * $ageMultiplier;
-
-        $additionalItemsArray = $travelerData['additionals'] ?? [];
-        $warnings = [];
-        $appliedAdditionals = [];
-
-        foreach ($additionalItemsArray as $additionalIdentifier) {
-
-            $isAValidAdditionalIdentifier = AdditionalCoverage::hasValue(mb_strtolower($additionalIdentifier));
-
-            if (!$isAValidAdditionalIdentifier) continue;
-
-            $adventureSportValidation = AdditionalCoverageRules::adventureSportsWarnings(
-                $additionalIdentifier,
-                $travelerAge,
-                $travelerData
-            );
-
-            if (!$adventureSportValidation['can_apply']) {
-                $warnings[] = $adventureSportValidation['warning'];
-                continue;
-            }
-
-            $subTotal += AdditionalsRate::cost($additionalIdentifier, $subTotal, $chargedDays);
-
-            $appliedAdditionals[] = $additionalIdentifier;
-        }
-
-        return [
-            'name' => $travelerData['name'],
-            'age' => $travelerAge,
-            'subtotal' => $subTotal,
-            'applied_additionals' => $appliedAdditionals,
-            'warnings' => $warnings
-        ];
-    }
 
     public function store(Request $request)
     {
@@ -98,7 +51,7 @@ class QuoteController extends Controller
         $chargedDays = CalculateChargedDays::getDays($startDate, $endDate);
 
         $travelersCost = array_map(
-            fn($traveler) => $this->calculateTravelerIndividualCost(
+            fn($traveler) => $this->quoteService->calculateTravelerIndividualCost(
                 $traveler,
                 $travelZone->dailyRate(),
                 $startDate,
