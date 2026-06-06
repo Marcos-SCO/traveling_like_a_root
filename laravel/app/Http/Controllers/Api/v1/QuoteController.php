@@ -11,11 +11,12 @@ use Illuminate\Validation\Rule;
 use App\Service\QuoteService;
 
 use App\Http\Requests\QuoteRequest;
+use App\Service\QuotePersistenceService;
 
 class QuoteController extends Controller
 {
 
-    public function __construct(private QuoteService $quoteService) {}
+    public function __construct(private QuoteService $quoteService, private QuotePersistenceService $quotePersistenceService) {}
 
     public function index(Request $request)
     {
@@ -26,8 +27,16 @@ class QuoteController extends Controller
 
     public function store(QuoteRequest $request)
     {
-        $calculateTotal = $this->quoteService->calculateTotal($request->validated());
+        $calculateData = $this->quoteService->calculateTotal($request->validated());
 
-        return response()->json($calculateTotal);
+        $this->quotePersistenceService
+            ->persist(
+                $request->validated(),
+                $calculateData
+            );
+
+        $formattedCalculatedArrayResponse = $this->quoteService->formattedCalculatedArrayResponse($calculateData);
+
+        return response()->json($formattedCalculatedArrayResponse);
     }
 }
