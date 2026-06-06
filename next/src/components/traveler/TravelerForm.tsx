@@ -1,5 +1,6 @@
 import { QuoteRequest } from "@/types/quote";
 import { UseFormRegister } from "react-hook-form";
+import Button from "../ui/button";
 
 interface TravelerFormProps {
   index: number;
@@ -55,9 +56,9 @@ export default function TravelerForm({
         </label>
       </div>
 
-      <button type="button" onClick={remove} className="text-red-500">
+      <Button type="button" onClick={remove} className="text-red-500">
         Remover Viajante
-      </button>
+      </Button>
     </div>
   );
 }
