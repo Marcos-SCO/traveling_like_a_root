@@ -18,6 +18,13 @@ class QuoteRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'travel_zone' => mb_strtolower($this->travel_zone),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
