@@ -20,6 +20,8 @@ class AdditionalsRate
 
     public static function cost(string $additionalIdentifier, float $subTotal = 0, int $chargedDays = 0): float
     {
+        $additionalIdentifier = strtolower($additionalIdentifier);
+        
         $additionalRate = self::number($additionalIdentifier);
 
         return match ($additionalIdentifier) {
