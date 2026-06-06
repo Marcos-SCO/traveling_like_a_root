@@ -8,6 +8,13 @@ enum TravelZone: string
     case AMERICAS = 'americas';
     case EUROPE = 'europa';
 
+    public static function hasValue(?string $value): bool
+    {
+        if (blank($value)) return false;
+
+        return self::tryFrom($value) !== null;
+    }
+
     public function dailyRate(): float
     {
         return match ($this) {
