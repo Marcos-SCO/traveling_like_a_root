@@ -99,7 +99,7 @@ export default function QuotesPage() {
         </Link>
       </div>
 
-      <div className="flex flex-wrap items-end gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="grid grid-cols-1 gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-4">
         {/* Destination */}
         <div className="flex flex-col">
           <label className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -114,7 +114,7 @@ export default function QuotesPage() {
                 cursor: undefined,
               })
             }
-            className="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-xl border border-slate-300 px-3 py-2 text-sm transition hover:border-slate-400 focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200 cursor-pointer"
           >
             <option value="">Todos</option>
 
@@ -141,7 +141,7 @@ export default function QuotesPage() {
                 cursor: undefined,
               })
             }
-            className="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-xl border border-slate-300 px-3 py-2 text-sm transition hover:border-slate-400 focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200"
           />
         </div>
 
@@ -160,17 +160,13 @@ export default function QuotesPage() {
                 cursor: undefined,
               })
             }
-            className="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-xl border border-slate-300 px-3 py-2 text-sm transition hover:border-slate-400 focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200"
           />
         </div>
 
         {/* Clear */}
-        {(searchParams.get("travel_zone") ||
-          searchParams.get("start_date") ||
-          searchParams.get("end_date") ||
-          searchParams.get("cursor")) && (
-          <button
-            onClick={() =>
+        <div className="flex items-end">
+          <button onClick={() =>
               updateFilters({
                 travel_zone: undefined,
                 start_date: undefined,
@@ -178,11 +174,11 @@ export default function QuotesPage() {
                 cursor: undefined,
               })
             }
-            className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 cursor-pointer"
           >
             Limpar filtros
           </button>
-        )}
+        </div>
       </div>
 
       {/* Table */}
