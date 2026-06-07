@@ -4,17 +4,15 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { quoteSchema } from "@/schemas/quoteSchema";
 import { QuoteRequest } from "@/types/quote";
 import { zodResolver } from "@hookform/resolvers/zod";
-import TravelerForm from "../traveler/TravelerForm";
+
 import { useQuote } from "@/hooks/useQuote";
 import TravelInformationFields from "./TravelInformationFields";
-import {
-  TravelersAdditionFormSection,
-  TravelersFormSection,
-} from "./TravelersAdditionFormSection";
+import { TravelersAdditionFormSection } from "./TravelersAdditionFormSection";
 
 export default function QuoteForm() {
   const form = useForm<QuoteRequest>({
     resolver: zodResolver(quoteSchema),
+    mode: "onTouched", // 👈 important for UX validation
     defaultValues: {
       travel_zone: "NACIONAL",
       start_date: "",
@@ -29,15 +27,21 @@ export default function QuoteForm() {
     },
   });
 
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors, isValid, isSubmitting },
+  } = form;
+
   const { fields, append, remove } = useFieldArray({
-    control: form.control,
+    control,
     name: "travelers",
   });
 
   const { submitQuote } = useQuote();
 
   const onSubmit = async (data: QuoteRequest) => {
-    console.log(data);
     await submitQuote(data);
   };
 
@@ -58,22 +62,26 @@ export default function QuoteForm() {
         </p>
       </div>
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <TravelInformationFields register={form.register} />
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <TravelInformationFields register={register} errors={errors} />
 
         <TravelersAdditionFormSection
           fields={fields}
           append={append}
           remove={remove}
-          register={form.register}
+          register={register}
+          errors={errors}
         />
 
         <div>
           <button
             type="submit"
-            className="w-full rounded-xl bg-blue-600 px-6 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md cursor-pointer"
+            disabled={!isValid || isSubmitting}
+            className="w-full rounded-xl bg-blue-600 px-6 py-4 text-lg font-semibold text-white shadow-sm transition
+                       hover:bg-blue-700 hover:shadow-md
+                       disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Calcular Cotação
+            {isSubmitting ? "Calculando..." : "Calcular Cotação"}
           </button>
         </div>
       </form>

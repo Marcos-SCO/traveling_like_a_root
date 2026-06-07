@@ -1,20 +1,42 @@
 import { QuoteRequest } from "@/types/quote";
-import { UseFormRegister } from "react-hook-form";
-import Button from "../ui/button";
+import { UseFormRegister, FieldErrors } from "react-hook-form";
 
 interface TravelerFormProps {
   index: number;
   remove: () => void;
   register: UseFormRegister<QuoteRequest>;
+  errors?: any; // 👈 per-traveler errors
+}
+
+function inputClass(hasError?: boolean) {
+  return `w-full rounded-xl border bg-white px-4 py-3 transition focus:outline-none
+    ${
+      hasError
+        ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-100"
+        : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+    }`;
+}
+
+function errorText(message?: string) {
+  if (!message) return null;
+
+  return <p className="mt-1 text-sm text-red-600">{message}</p>;
 }
 
 export default function TravelerForm({
   index,
   remove,
   register,
+  errors,
 }: TravelerFormProps) {
+  const hasTravelerError = !!errors?.name || !!errors?.birth_date;
+
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div
+      className={`rounded-2xl border bg-white p-6 shadow-sm transition
+        ${hasTravelerError ? "border-red-200" : "border-slate-200"}
+      `}
+    >
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -37,35 +59,52 @@ export default function TravelerForm({
           <button
             type="button"
             onClick={remove}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-red-200 transition bg-red-500 hover:bg-red-600 text-white cursor-pointer font-bold"
-            aria-label="Remover viajante">✕</button>
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition"
+            aria-label="Remover viajante"
+          >
+            ✕
+          </button>
         )}
       </div>
 
       {/* Personal Information */}
       <div className="grid gap-4 md:grid-cols-2">
+        {/* NAME */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700 cursor-pointer" htmlFor={`traveler_name-${index}`}>
+          <label
+            className="mb-2 block text-sm font-medium text-slate-700"
+            htmlFor={`traveler_name-${index}`}
+          >
             Nome Completo
           </label>
 
-          <input id={`traveler_name-${index}`}
-            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 transition focus:border-blue-500 focus:outline-none"
+          <input
+            id={`traveler_name-${index}`}
+            className={inputClass(!!errors?.name)}
             placeholder="Ex: Ana Silva"
             {...register(`travelers.${index}.name`)}
           />
+
+          {errorText(errors?.name?.message)}
         </div>
 
+        {/* BIRTH DATE */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700 cursor-pointer" htmlFor={`traveler_birthdate-${index}`}>
+          <label
+            className="mb-2 block text-sm font-medium text-slate-700"
+            htmlFor={`traveler_birthdate-${index}`}
+          >
             Data de Nascimento
           </label>
 
-          <input id={`traveler_birthdate-${index}`}
+          <input
+            id={`traveler_birthdate-${index}`}
             type="date"
-            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 transition focus:border-blue-500 focus:outline-none"
+            className={inputClass(!!errors?.birth_date)}
             {...register(`travelers.${index}.birth_date`)}
           />
+
+          {errorText(errors?.birth_date?.message)}
         </div>
       </div>
 
@@ -85,7 +124,6 @@ export default function TravelerForm({
 
             <div>
               <p className="font-medium text-slate-900">🧳 Bagagem</p>
-
               <p className="text-sm text-slate-500">
                 Proteção para extravio ou danos.
               </p>
@@ -103,7 +141,6 @@ export default function TravelerForm({
               <p className="font-medium text-slate-900">
                 🏔️ Esportes de Aventura
               </p>
-
               <p className="text-sm text-slate-500">
                 Cobertura para atividades radicais.
               </p>

@@ -2,6 +2,7 @@ import {
   UseFieldArrayAppend,
   UseFieldArrayRemove,
   UseFormRegister,
+  FieldErrors,
 } from "react-hook-form";
 
 import TravelerForm from "../traveler/TravelerForm";
@@ -12,6 +13,7 @@ interface TravelersAdditionFormSectionProps {
   append: UseFieldArrayAppend<QuoteRequest, "travelers">;
   remove: UseFieldArrayRemove;
   register: UseFormRegister<QuoteRequest>;
+  errors: FieldErrors<QuoteRequest>;
 }
 
 export function TravelersAdditionFormSection({
@@ -19,9 +21,11 @@ export function TravelersAdditionFormSection({
   append,
   remove,
   register,
+  errors,
 }: TravelersAdditionFormSectionProps) {
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+      {/* Header */}
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="mb-2 flex items-center gap-3">
@@ -55,6 +59,7 @@ export function TravelersAdditionFormSection({
         </button>
       </div>
 
+      {/* Travelers list */}
       <div className="space-y-5">
         {fields.map((field, index) => (
           <TravelerForm
@@ -62,6 +67,7 @@ export function TravelersAdditionFormSection({
             index={index}
             remove={() => remove(index)}
             register={register}
+            errors={errors?.travelers?.[index]} // 👈 IMPORTANT
           />
         ))}
       </div>
