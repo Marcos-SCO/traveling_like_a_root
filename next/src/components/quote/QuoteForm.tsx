@@ -38,7 +38,20 @@ export default function QuoteForm() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Cotação de viajem</h1>
+      <div className="mb-10 space-y-3">
+        <span className="inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">
+          Seguro Viagem
+        </span>
+
+        <h3 className="text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
+          Inicie sua cotação de viagem
+        </h3>
+
+        <p className="max-w-2xl text-lg text-slate-600">
+          Informe seu destino, período da viagem e viajantes para calcular o
+          valor do seguro em poucos segundos.
+        </p>
+      </div>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Travel Zone */}
@@ -77,7 +90,7 @@ export default function QuoteForm() {
           Adicionar Viajante
         </button>
 
-        <button type="submit" >Calcular Quotação</button>
+        <button type="submit">Calcular Quotação</button>
       </form>
     </div>
   );
