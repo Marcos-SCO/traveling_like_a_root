@@ -12,7 +12,8 @@ import { TravelersAdditionFormSection } from "./TravelersAdditionFormSection";
 export default function QuoteForm() {
   const form = useForm<QuoteRequest>({
     resolver: zodResolver(quoteSchema),
-    mode: "onTouched", // 👈 important for UX validation
+    mode: "onSubmit",
+    reValidateMode: "onChange",
     defaultValues: {
       travel_zone: "NACIONAL",
       start_date: "",
@@ -31,7 +32,7 @@ export default function QuoteForm() {
     register,
     control,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isSubmitting },
   } = form;
 
   const { fields, append, remove } = useFieldArray({
@@ -76,8 +77,8 @@ export default function QuoteForm() {
         <div className="flex justify-end">
           <button
             type="submit"
-            disabled={!isValid || isSubmitting}
-            className="rounded-xl bg-gray-600 px-6 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-gray-700 hover:shadow-md  disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            disabled={isSubmitting}
+            className="rounded-xl bg-gray-600 px-6 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-gray-700 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {isSubmitting ? "Calculando..." : "Calcular Cotação"}
           </button>
