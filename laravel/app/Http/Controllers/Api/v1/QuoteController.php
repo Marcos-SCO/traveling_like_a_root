@@ -11,6 +11,8 @@ use Illuminate\Validation\Rule;
 use App\Service\QuoteService;
 
 use App\Http\Requests\QuoteRequest;
+use App\Http\Resources\QuoteResource;
+use App\Models\Quote;
 use App\Service\QuotePersistenceService;
 
 class QuoteController extends Controller
@@ -20,9 +22,25 @@ class QuoteController extends Controller
 
     public function index(Request $request)
     {
-        // --- IGNORE ---
+        $quotes = Quote::query()
+            ->when($request->travel_zone, function ($query) use ($request) {
+                $query->where('travel_zone', $request->travel_zone);
+            })
+            ->orderBy('id')
+            ->cursorPaginate(
+                perPage: 10,
+                cursor: $request->cursor
+            );
 
-        return response()->json(['message' => 'starting point']);
+        return response()->json($quotes);
+    }
+
+    public function show(int $id)
+    {
+        $quote = Quote::with('travelers.additionals')
+            ->findOrFail($id);
+
+        return response()->json(new QuoteResource($quote));
     }
 
     public function store(QuoteRequest $request)
