@@ -73,13 +73,11 @@ export default function QuoteForm() {
           errors={errors}
         />
 
-        <div>
+        <div className="flex justify-end">
           <button
             type="submit"
             disabled={!isValid || isSubmitting}
-            className="w-full rounded-xl bg-blue-600 px-6 py-4 text-lg font-semibold text-white shadow-sm transition
-                       hover:bg-blue-700 hover:shadow-md
-                       disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-xl bg-gray-600 px-6 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-gray-700 hover:shadow-md  disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {isSubmitting ? "Calculando..." : "Calcular Cotação"}
           </button>
