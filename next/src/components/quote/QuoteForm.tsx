@@ -6,6 +6,7 @@ import { QuoteRequest } from "@/types/quote";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TravelerForm from "../traveler/TravelerForm";
 import { useQuote } from "@/hooks/useQuote";
+import TravelInformationFields from "./TravelInformationFields";
 
 export default function QuoteForm() {
   const form = useForm<QuoteRequest>({
@@ -54,55 +55,8 @@ export default function QuoteForm() {
       </div>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {/* Travel Information */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-6 text-lg font-semibold text-slate-900">
-            Informações da Viagem
-          </h2>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">
-                Destino
-              </label>
-
-              <select
-                className="w-full rounded-lg borderborder-slate-300 px-4 py-3 focus:border-blue-500 focus:outline-none"
-                {...form.register("travel_zone")}
-              >
-                <option value="NACIONAL">Nacional</option>
-
-                <option value="AMERICAS">Américas</option>
-
-                <option value="EUROPA">Europa</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">
-                Data Inicial
-              </label>
-
-              <input
-                type="date"
-                className="w-full rounded-lg border border-slate-300 px-4py-3 focus:border-blue-500 focus:outline-none"
-                {...form.register("start_date")}
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">
-                Data Final
-              </label>
-
-              <input
-                type="date"
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-blue-500 focus:outline-none"
-                {...form.register("end_date")}
-              />
-            </div>
-          </div>
-        </div>
+        
+        <TravelInformationFields register={form.register} />
 
         {/* Travelers */}
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
