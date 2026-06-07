@@ -55,7 +55,7 @@ export default function QuoteForm() {
       </div>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        
+
         <TravelInformationFields register={form.register} />
 
         {/* Travelers */}
@@ -100,10 +100,8 @@ export default function QuoteForm() {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="rounded-xl bg-slate-900 px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-slate-800"
-          >
-            Calcular Cotação
-          </button>
+            className="rounded-xl bg-slate-700 px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-slate-600 cursor-pointer"
+          >Calcular Cotação</button>
         </div>
       </form>
     </div>
