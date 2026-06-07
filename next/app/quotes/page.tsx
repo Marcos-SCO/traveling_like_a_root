@@ -5,6 +5,8 @@ import Link from "next/link";
 import { getQuotes } from "@/services/quoteService";
 import { QuoteListResponse } from "@/types/quote";
 
+import { useSearchParams, useRouter } from "next/navigation";
+
 const zoneStyles = {
   NACIONAL: "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200",
   AMERICAS: "bg-sky-100 text-sky-700 ring-1 ring-sky-200",
@@ -15,21 +17,36 @@ export default function QuotesPage() {
   const [data, setData] = useState<QuoteListResponse | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function loadQuotes(nextCursor?: string) {
-    setLoading(true);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-    const res = await getQuotes(nextCursor);
+  const navigateToCursor = async (cursor?: string) => {
+    const params = new URLSearchParams(searchParams.toString());
 
-    if (res.success) {
-      setData(res.data);
+    cursor ? params.set("cursor", cursor) : params.delete("cursor");
+
+    router.push(`/quotes?${params.toString()}`);
+  };
+
+  async function loadQuotes(cursor?: string) {
+    try {
+      setLoading(true);
+
+      const res = await getQuotes(cursor);
+
+      if (res.success) {
+        setData(res.data);
+      }
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   }
 
   useEffect(() => {
-    loadQuotes();
-  }, []);
+    const cursor = searchParams.get("cursor") ?? undefined;
+
+    loadQuotes(cursor);
+  }, [searchParams]);
 
   if (!data) {
     return (
@@ -104,7 +121,7 @@ export default function QuotesPage() {
                   <span
                     className={`inline-flex items-center rounded-full px-3.5 py-1.5 text-xs font-semibold ${
                       zoneStyles[
-                        quote.travel_zone as keyof typeof zoneStyles
+                        quote.travel_zone?.toUpperCase() as keyof typeof zoneStyles
                       ] ?? "bg-slate-100 text-slate-700"
                     }`}
                   >
@@ -149,8 +166,16 @@ export default function QuotesPage() {
       {/* Pagination */}
       <div className="flex items-center justify-between">
         <button
+          disabled={loading || !searchParams.get("cursor")}
+          onClick={() => navigateToCursor(undefined)}
+          className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+        >
+          « Primeira
+        </button>
+
+        <button
           disabled={!data.prev_cursor || loading}
-          onClick={() => loadQuotes(data.prev_cursor ?? undefined)}
+          onClick={() => navigateToCursor(data.prev_cursor ?? undefined)}
           className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
         >
           ← Anterior
@@ -158,7 +183,7 @@ export default function QuotesPage() {
 
         <button
           disabled={!data.next_cursor || loading}
-          onClick={() => loadQuotes(data.next_cursor ?? undefined)}
+          onClick={() => navigateToCursor(data.next_cursor ?? undefined)}
           className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
         >
           Próximo →
