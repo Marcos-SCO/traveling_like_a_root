@@ -16,5 +16,5 @@ export interface QuoteResponse {
     travelers: QuoteTraveler[];
     warnings: string[];
     group_discount_percentage: number;
-    total_final: number;
+    total_amount: number;
 }
