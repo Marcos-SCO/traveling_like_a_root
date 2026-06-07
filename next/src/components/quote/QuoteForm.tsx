@@ -7,6 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import TravelerForm from "../traveler/TravelerForm";
 import { useQuote } from "@/hooks/useQuote";
 import TravelInformationFields from "./TravelInformationFields";
+import {
+  TravelersAdditionFormSection,
+  TravelersFormSection,
+} from "./TravelersAdditionFormSection";
 
 export default function QuoteForm() {
   const form = useForm<QuoteRequest>({
@@ -55,53 +59,23 @@ export default function QuoteForm() {
       </div>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-
         <TravelInformationFields register={form.register} />
 
-        {/* Travelers */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="mb-6 flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold">Viajantes</h2>
-
-              <p className="text-sm text-slate-500">
-                Adicione todos os viajantes
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() =>
-                append({
-                  name: "",
-                  birth_date: "",
-                  additionals: [],
-                })
-              }
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 cursor-pointer"
-            >
-              + Adicionar
-            </button>
-          </div>
-
-          <div className="space-y-4">
-            {fields.map((field, index) => (
-              <TravelerForm
-                key={field.id}
-                index={index}
-                remove={() => remove(index)}
-                register={form.register}
-              />
-            ))}
-          </div>
-        </div>
+        <TravelersAdditionFormSection
+          fields={fields}
+          append={append}
+          remove={remove}
+          register={form.register}
+        />
 
         {/* Submit */}
         <div className="flex justify-end">
           <button
             type="submit"
             className="rounded-xl bg-slate-700 px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-slate-600 cursor-pointer"
-          >Calcular Cotação</button>
+          >
+            Calcular Cotação
+          </button>
         </div>
       </form>
     </div>
