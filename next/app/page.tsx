@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-5xl px-6 py-10">
+    <div className="p-6">
       {/* Content */}
       <div className="space-y-6">
         {/* Form Card */}

@@ -32,7 +32,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-screen antialiased">
-        <div className="bg-slate-100 px-6 py-10">
+        <div className="bg-slate-100 px-6 py-10 min-h-screen">
           {/* HEADER (shared across pages) */}
           <header className="mx-auto max-w-5xl mb-6 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 group">
