@@ -82,7 +82,7 @@ export default function TravelerForm({
           <input
             id={`traveler_name-${index}`}
             className={inputClass(!!errors?.name)}
-            placeholder="Ex: Ana Silva"
+            placeholder="Digite seu nome"
             {...register(`travelers.${index}.name`)}
           />
 
