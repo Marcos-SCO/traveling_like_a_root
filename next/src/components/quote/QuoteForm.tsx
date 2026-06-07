@@ -53,44 +53,104 @@ export default function QuoteForm() {
         </p>
       </div>
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Travel Zone */}
-        <select {...form.register("travel_zone")}>
-          <option value="NACIONAL">Nacional</option>
-          <option value="AMERICAS">Americas</option>
-          <option value="EUROPA">Europa</option>
-        </select>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {/* Travel Information */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="mb-6 text-lg font-semibold text-slate-900">
+            Informações da Viagem
+          </h2>
 
-        {/* Start Date */}
-        <input type="date" {...form.register("start_date")} />
+          <div className="grid gap-4 md:grid-cols-3">
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Destino
+              </label>
 
-        {/* End Date */}
-        <input type="date" {...form.register("end_date")} />
+              <select
+                className="w-full rounded-lg borderborder-slate-300 px-4 py-3 focus:border-blue-500 focus:outline-none"
+                {...form.register("travel_zone")}
+              >
+                <option value="NACIONAL">Nacional</option>
+
+                <option value="AMERICAS">Américas</option>
+
+                <option value="EUROPA">Europa</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Data Inicial
+              </label>
+
+              <input
+                type="date"
+                className="w-full rounded-lg border border-slate-300 px-4py-3 focus:border-blue-500 focus:outline-none"
+                {...form.register("start_date")}
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Data Final
+              </label>
+
+              <input
+                type="date"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-blue-500 focus:outline-none"
+                {...form.register("end_date")}
+              />
+            </div>
+          </div>
+        </div>
 
         {/* Travelers */}
-        {fields.map((field, index) => (
-          <TravelerForm
-            key={field.id}
-            index={index}
-            remove={() => remove(index)}
-            register={form.register}
-          />
-        ))}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold">Viajantes</h2>
 
-        <button
-          type="button"
-          onClick={() =>
-            append({
-              name: "",
-              birth_date: "",
-              additionals: [],
-            })
-          }
-        >
-          Adicionar Viajante
-        </button>
+              <p className="text-sm text-slate-500">
+                Adicione todos os viajantes
+              </p>
+            </div>
 
-        <button type="submit">Calcular Quotação</button>
+            <button
+              type="button"
+              onClick={() =>
+                append({
+                  name: "",
+                  birth_date: "",
+                  additionals: [],
+                })
+              }
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 cursor-pointer"
+            >
+              + Adicionar
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {fields.map((field, index) => (
+              <TravelerForm
+                key={field.id}
+                index={index}
+                remove={() => remove(index)}
+                register={form.register}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Submit */}
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className="rounded-xl bg-slate-900 px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-slate-800"
+          >
+            Calcular Cotação
+          </button>
+        </div>
       </form>
     </div>
   );
