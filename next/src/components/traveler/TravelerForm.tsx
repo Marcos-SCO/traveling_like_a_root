@@ -60,7 +60,7 @@ export default function TravelerForm({
           <button
             type="button"
             onClick={remove}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition cursor-pointer"
             aria-label="Remover viajante"
           >
             ✕
