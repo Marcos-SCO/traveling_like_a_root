@@ -34,6 +34,21 @@ export async function createQuote(
     }
 }
 
+export async function getQuote(id: string) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/quote/${id}`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch quote");
+  }
+
+  return response.json();
+}
+
 export async function getQuotes(cursor?: string, travelZone?: string, startDate?: string, endDate?: string) {
     try {
         const params = new URLSearchParams();
