@@ -68,11 +68,10 @@ export default function QuoteForm() {
           register={form.register}
         />
 
-        {/* Submit */}
-        <div className="flex justify-end">
+        <div>
           <button
             type="submit"
-            className="rounded-xl bg-slate-700 px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-slate-600 cursor-pointer"
+            className="w-full rounded-xl bg-blue-600 px-6 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md cursor-pointer"
           >
             Calcular Cotação
           </button>
