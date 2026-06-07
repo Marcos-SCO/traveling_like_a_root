@@ -1,9 +1,9 @@
 import { UseFormRegister, FieldErrors } from "react-hook-form";
-import { QuoteRequest } from "@/types/quote";
+import { QuoteFormValues } from "@/schemas/quoteSchema";
 
 interface TravelInformationFieldsProps {
-  register: UseFormRegister<QuoteRequest>;
-  errors: FieldErrors<QuoteRequest>;
+  register: UseFormRegister<QuoteFormValues>;
+  errors: FieldErrors<QuoteFormValues>;
 }
 
 function inputClass(hasError?: boolean) {

@@ -1,11 +1,12 @@
-import { QuoteRequest } from "@/types/quote";
+import { QuoteFormValues } from "@/schemas/quoteSchema";
+
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 
 interface TravelerFormProps {
   index: number;
   remove: () => void;
-  register: UseFormRegister<QuoteRequest>;
-  errors?: any; // 👈 per-traveler errors
+  register: UseFormRegister<QuoteFormValues>;
+  errors?: any;
 }
 
 function inputClass(hasError?: boolean) {

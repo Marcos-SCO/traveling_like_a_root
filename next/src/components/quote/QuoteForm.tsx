@@ -1,8 +1,8 @@
 "use client";
 
 import { useForm, useFieldArray } from "react-hook-form";
-import { quoteSchema } from "@/schemas/quoteSchema";
-import { QuoteRequest } from "@/types/quote";
+
+import { quoteSchema, QuoteFormValues } from "@/schemas/quoteSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useQuote } from "@/hooks/useQuote";
@@ -10,7 +10,7 @@ import TravelInformationFields from "./TravelInformationFields";
 import { TravelersAdditionFormSection } from "./TravelersAdditionFormSection";
 
 export default function QuoteForm() {
-  const form = useForm<QuoteRequest>({
+  const form = useForm<QuoteFormValues>({
     resolver: zodResolver(quoteSchema),
     mode: "onSubmit",
     reValidateMode: "onChange",
@@ -42,7 +42,7 @@ export default function QuoteForm() {
 
   const { submitQuote } = useQuote();
 
-  const onSubmit = async (data: QuoteRequest) => {
+  const onSubmit = async (data: QuoteFormValues) => {
     await submitQuote(data);
   };
 

@@ -6,14 +6,14 @@ import {
 } from "react-hook-form";
 
 import TravelerForm from "../traveler/TravelerForm";
-import { QuoteRequest } from "@/types/quote";
+import { QuoteFormValues } from "@/schemas/quoteSchema";
 
 interface TravelersAdditionFormSectionProps {
   fields: Array<{ id: string }>;
-  append: UseFieldArrayAppend<QuoteRequest, "travelers">;
+  append: UseFieldArrayAppend<QuoteFormValues, "travelers">;
   remove: UseFieldArrayRemove;
-  register: UseFormRegister<QuoteRequest>;
-  errors: FieldErrors<QuoteRequest>;
+  register: UseFormRegister<QuoteFormValues>;
+  errors: FieldErrors<QuoteFormValues>;
 }
 
 export function TravelersAdditionFormSection({
@@ -67,7 +67,7 @@ export function TravelersAdditionFormSection({
             index={index}
             remove={() => remove(index)}
             register={register}
-            errors={errors?.travelers?.[index]} // 👈 IMPORTANT
+            errors={errors?.travelers?.[index]} 
           />
         ))}
       </div>
