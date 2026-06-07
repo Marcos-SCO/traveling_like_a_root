@@ -34,10 +34,11 @@ export async function createQuote(
     }
 }
 
-export async function getQuotes(cursor?: string) {
+export async function getQuotes(cursor?: string, travelZone?: string) {
     try {
         const { data } = await api.get<QuoteListResponse>("/quotes", {
             params: cursor ? { cursor } : undefined,
+            ...(travelZone && { travel_zone: travelZone })
         });
 
         return {
@@ -46,7 +47,7 @@ export async function getQuotes(cursor?: string) {
         } as const;
 
     } catch (error: any) {
-        
+
         if (error?.response) {
             return {
                 success: false,

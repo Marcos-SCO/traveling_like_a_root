@@ -6,6 +6,7 @@ import { getQuotes } from "@/services/quoteService";
 import { QuoteListResponse } from "@/types/quote";
 
 import { useSearchParams, useRouter } from "next/navigation";
+import { TravelZoneEnum } from "@/schemas/quoteSchema";
 
 const zoneStyles = {
   NACIONAL: "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200",
@@ -20,19 +21,27 @@ export default function QuotesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const navigateToCursor = async (cursor?: string) => {
+  const updateFilters = (
+    filters: Record<string, string | undefined | null>,
+  ) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    cursor ? params.set("cursor", cursor) : params.delete("cursor");
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
 
     router.push(`/quotes?${params.toString()}`);
   };
 
-  async function loadQuotes(cursor?: string) {
+  async function loadQuotes(cursor?: string, travelZone?: string) {
     try {
       setLoading(true);
 
-      const res = await getQuotes(cursor);
+      const res = await getQuotes(cursor, travelZone);
 
       if (res.success) {
         setData(res.data);
@@ -44,8 +53,9 @@ export default function QuotesPage() {
 
   useEffect(() => {
     const cursor = searchParams.get("cursor") ?? undefined;
+    const selectedZone = searchParams.get("travel_zone") ?? "";
 
-    loadQuotes(cursor);
+    loadQuotes(cursor, selectedZone);
   }, [searchParams]);
 
   if (!data) {
@@ -167,7 +177,7 @@ export default function QuotesPage() {
       <div className="flex items-center justify-between">
         <button
           disabled={loading || !searchParams.get("cursor")}
-          onClick={() => navigateToCursor(undefined)}
+          onClick={() => updateFilters({ cursor: undefined })}
           className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
         >
           « Primeira
@@ -175,7 +185,7 @@ export default function QuotesPage() {
 
         <button
           disabled={!data.prev_cursor || loading}
-          onClick={() => navigateToCursor(data.prev_cursor ?? undefined)}
+          onClick={() => updateFilters({ cursor: data.prev_cursor })}
           className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
         >
           ← Anterior
@@ -183,7 +193,7 @@ export default function QuotesPage() {
 
         <button
           disabled={!data.next_cursor || loading}
-          onClick={() => navigateToCursor(data.next_cursor ?? undefined)}
+          onClick={() => updateFilters({ cursor: data.next_cursor })}
           className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
         >
           Próximo →
