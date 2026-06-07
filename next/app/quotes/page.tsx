@@ -8,6 +8,8 @@ import { QuoteListResponse } from "@/types/quote";
 import { useSearchParams, useRouter } from "next/navigation";
 import { TravelZoneEnum } from "@/schemas/quoteSchema";
 
+import { displayFormatDate } from "@/src/utils/date";
+
 const zoneStyles = {
   NACIONAL: "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200",
   AMERICAS: "bg-sky-100 text-sky-700 ring-1 ring-sky-200",
@@ -37,11 +39,16 @@ export default function QuotesPage() {
     router.push(`/quotes?${params.toString()}`);
   };
 
-  async function loadQuotes(cursor?: string, travelZone?: string) {
+  async function loadQuotes(
+    cursor?: string,
+    travelZone?: string,
+    startDate?: string,
+    endDate?: string,
+  ) {
     try {
       setLoading(true);
 
-      const res = await getQuotes(cursor, travelZone);
+      const res = await getQuotes(cursor, travelZone, startDate, endDate);
 
       if (res.success) {
         setData(res.data);
@@ -52,10 +59,12 @@ export default function QuotesPage() {
   }
 
   useEffect(() => {
-    const cursor = searchParams.get("cursor") ?? undefined;
-    const selectedZone = (searchParams.get("travel_zone"))?.toLocaleLowerCase() ?? "";
-
-    loadQuotes(cursor, selectedZone);
+    loadQuotes(
+      searchParams.get("cursor") ?? undefined,
+      searchParams.get("travel_zone")?.toLowerCase(),
+      searchParams.get("start_date") ?? undefined,
+      searchParams.get("end_date") ?? undefined,
+    );
   }, [searchParams]);
 
   if (!data) {
@@ -90,7 +99,8 @@ export default function QuotesPage() {
         </Link>
       </div>
 
-      <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="flex flex-wrap items-end gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        {/* Destination */}
         <div className="flex flex-col">
           <label className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
             Destino
@@ -101,10 +111,10 @@ export default function QuotesPage() {
             onChange={(e) =>
               updateFilters({
                 travel_zone: e.target.value || undefined,
-                cursor: undefined, 
+                cursor: undefined,
               })
             }
-            className="rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+            className="rounded-xl border border-slate-300 px-3 py-2 text-sm"
           >
             <option value="">Todos</option>
 
@@ -116,15 +126,59 @@ export default function QuotesPage() {
           </select>
         </div>
 
-        {(searchParams.get("travel_zone") || searchParams.get("cursor")) && (
+        {/* Start Date */}
+        <div className="flex flex-col">
+          <label className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            Data Inicial
+          </label>
+
+          <input
+            type="date"
+            value={searchParams.get("start_date") ?? ""}
+            onChange={(e) =>
+              updateFilters({
+                start_date: e.target.value || undefined,
+                cursor: undefined,
+              })
+            }
+            className="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+          />
+        </div>
+
+        {/* End Date */}
+        <div className="flex flex-col">
+          <label className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            Data Final
+          </label>
+
+          <input
+            type="date"
+            value={searchParams.get("end_date") ?? ""}
+            onChange={(e) =>
+              updateFilters({
+                end_date: e.target.value || undefined,
+                cursor: undefined,
+              })
+            }
+            className="rounded-xl border border-slate-300 px-3 py-2 text-sm"
+          />
+        </div>
+
+        {/* Clear */}
+        {(searchParams.get("travel_zone") ||
+          searchParams.get("start_date") ||
+          searchParams.get("end_date") ||
+          searchParams.get("cursor")) && (
           <button
             onClick={() =>
               updateFilters({
                 travel_zone: undefined,
+                start_date: undefined,
+                end_date: undefined,
                 cursor: undefined,
               })
             }
-            className="mt-5 rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             Limpar filtros
           </button>
@@ -185,15 +239,15 @@ export default function QuotesPage() {
                 </td>
 
                 <td className="px-7 py-5 text-left text-slate-700">
-                  {new Date(quote.created_at).toLocaleDateString("pt-BR")}
+                  {displayFormatDate(quote.created_at)}
                 </td>
 
                 <td className="px-7 py-5 text-left text-slate-700">
-                  {new Date(quote.start_date).toLocaleDateString("pt-BR")}
+                  {displayFormatDate(quote.start_date)}
                 </td>
 
                 <td className="px-7 py-5 text-left text-slate-700">
-                  {new Date(quote.end_date).toLocaleDateString("pt-BR")}
+                  {displayFormatDate(quote.end_date)}
                 </td>
 
                 <td className="px-7 py-5 text-left font-semibold tabular-nums text-slate-900">

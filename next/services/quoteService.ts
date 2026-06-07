@@ -34,12 +34,14 @@ export async function createQuote(
     }
 }
 
-export async function getQuotes(cursor?: string, travelZone?: string) {
+export async function getQuotes(cursor?: string, travelZone?: string, startDate?: string, endDate?: string) {
     try {
         const params = new URLSearchParams();
 
         if (cursor) params.set("cursor", cursor);
         if (travelZone) params.set("travel_zone", travelZone);
+        if (startDate) params.set("start_date", startDate);
+        if (endDate) params.set("end_date", endDate);
 
         const response = await api.get(`/quotes?${params.toString()}`);
 

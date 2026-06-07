@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Enums\TravelZone;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\QuoteIndexRequest;
 use Illuminate\Http\Request;
 
 use Illuminate\Validation\Rule;
@@ -20,13 +21,31 @@ class QuoteController extends Controller
 
     public function __construct(private QuoteService $quoteService, private QuotePersistenceService $quotePersistenceService) {}
 
-    public function index(Request $request)
+    public function index(QuoteIndexRequest $request)
     {
         $quotes = Quote::query()
-            ->when($request->travel_zone, function ($query) use ($request) {
-                $query->where('travel_zone', $request->travel_zone);
-            })
-            ->latest('id')
+            ->when(
+                $request->travel_zone,
+                fn($query, $travelZone) =>
+                $query->where('travel_zone', $travelZone)
+            )
+            ->when(
+                $request->start_date,
+                fn($query, $startDate) =>
+                $query->whereDate('start_date', '>=', $startDate)
+            )
+            ->when(
+                $request->end_date,
+                fn($query, $endDate) =>
+                $query->whereDate('end_date', '<=', $endDate)
+            )
+            ->when(
+                $request->start_date || $request->end_date,
+                fn($query) =>
+                $query->orderBy('start_date')->orderBy('id'),
+                fn($query) =>
+                $query->latest('end_date')
+            )
             ->cursorPaginate(10);
 
         return response()->json($quotes);
