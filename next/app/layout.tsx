@@ -4,6 +4,8 @@ import "./globals.css";
 
 import { Toaster } from "react-hot-toast";
 
+import Link from "next/link";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,9 +31,43 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        {children}
-        <Toaster position="top-right" />
+      <body className="min-h-screen antialiased">
+        <div className="bg-slate-100 px-6 py-10">
+          {/* HEADER (shared across pages) */}
+          <header className="mx-auto max-w-5xl mb-6 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="h-9 w-9 rounded-lg bg-slate-900 flex items-center justify-center text-white font-bold shadow-sm transition group-hover:scale-105">
+                R
+              </div>
+
+              <span className="text-lg font-semibold text-slate-800 tracking-tight">
+                Traveling Like a Root
+              </span>
+            </Link>
+
+            <nav className="flex items-center gap-3">
+              <Link
+                href="/"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-200 hover:text-slate-900 transition"
+              >
+                Home
+              </Link>
+
+              <Link
+                href="/quotes"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-200 hover:text-slate-900 transition"
+              >
+                Ver cotações
+              </Link>
+            </nav>
+          </header>
+
+          {/* PAGE CONTENT CHANGES HERE */}
+          <main className="space-y-6 mx-auto max-w-5xl">
+            {children}
+            <Toaster position="top-right" />
+          </main>
+        </div>
       </body>
     </html>
   );
