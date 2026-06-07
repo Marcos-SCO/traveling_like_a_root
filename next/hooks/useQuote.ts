@@ -3,6 +3,7 @@ import { createQuote } from "@/services/quoteService";
 import { useQuoteStore } from "@/store/quoteStore";
 
 import { QuoteFormValues } from "@/schemas/quoteSchema";
+import { success } from "zod";
 
 export function useQuote() {
     const { setQuote, setLoading } = useQuoteStore();
@@ -12,12 +13,12 @@ export function useQuote() {
             setLoading(true);
 
             const result = await createQuote(payload);
-
+            
             if (!(result.success)) {
                 toast.error(result.error);
                 return;
             }
-            
+
             // setQuote(result.data);
             toast.success("Cotação gerada com sucesso!");
         } finally {
