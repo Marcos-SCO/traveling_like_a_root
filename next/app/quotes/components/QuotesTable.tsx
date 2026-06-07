@@ -1,5 +1,6 @@
 import { QuoteListItem } from "@/types/quote";
 import { displayFormatDate } from "@/src/utils/date";
+import Link from "next/link";
 
 const zoneStyles = {
   NACIONAL: "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200",
@@ -39,6 +40,10 @@ export default function QuotesTable({ quotes }: QuotesTableProps) {
 
             <th className="px-7 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
               Subtotal
+            </th>
+
+            <th className="px-7 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Ações
             </th>
           </tr>
         </thead>
@@ -82,6 +87,15 @@ export default function QuotesTable({ quotes }: QuotesTableProps) {
                   style: "currency",
                   currency: "BRL",
                 })}
+              </td>
+
+              <td className="px-7 py-5">
+                <Link
+                  href={`/quotes/${quote.id}`}
+                  className="inline-flex items-center rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+                >
+                  Ver detalhes
+                </Link>
               </td>
             </tr>
           ))}
