@@ -42,16 +42,16 @@ class QuoteService
             'start_date' => $startDate,
             'end_date' => $endDate,
             'subtotal_amount' => $totalGroupCost,
-            
+
             'charged_days' => $chargedDays,
-            
+
             'travelers_calculated_cost_data' => $travelersCalculatedCostData,
-            
+
             'warnings' =>  $allWarningMessages,
 
             'discount_amount' => $groupPercentageDiscount,
             'group_discount_percentage' => $groupPercentageDiscount * 100,
-            'total_amount' => (int) round($totalEnd, 2),
+            'total_amount' => round($totalEnd, 2),
         ];
     }
 
