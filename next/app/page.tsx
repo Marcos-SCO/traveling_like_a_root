@@ -26,9 +26,10 @@ export default function Home() {
           </section>
 
           {/* Result Card */}
-          <section className="rounded-xl bg-white p-6 shadow-sm border border-slate-200">
+          {/* <section className="rounded-xl bg-white p-6 shadow-sm border border-slate-200">
             <QuoteResult />
-          </section>
+          </section> */}
+
         </div>
       </div>
     </main>

@@ -2,29 +2,33 @@ import { api } from "@/lib/axios";
 import { QuoteRequest, QuoteResponse } from "@/types/quote";
 
 type QuoteServiceResult =
-  | { success: true; data: QuoteResponse }
-  | { success: false; error: string };
+    | { success: true; data: QuoteResponse }
+    | { success: false; error: string; status?: number };
 
 export async function createQuote(
-  payload: QuoteRequest
+    payload: QuoteRequest
 ): Promise<QuoteServiceResult> {
-  try {
-    const { data } = await api.post("/quote", payload);
+    try {
+        const { data } = await api.post("/quote", payload);
 
-    console.log("Quote response:", data);
+        return {
+            success: true,
+            data,
+        };
 
-    return {
-      success: true,
-      data,
-    };
-  } catch (error: any) {
-    console.error("Error creating quote:", error);
+    } catch (error: any) {
 
-    return {
-      success: false,
-      error:
-        error?.response?.data?.message ||
-        "Erro inesperado ao criar cotação",
-    };
-  }
+        if (error?.response) {
+            return {
+                success: false,
+                error: error.response.data?.message || "Erro de validação na cotação",
+                status: error.response.status,
+            };
+        }
+
+        return {
+            success: false,
+            error: "Erro inesperado ao criar cotação",
+        };
+    }
 }
