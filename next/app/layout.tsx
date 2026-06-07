@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+import NextTopLoader from "nextjs-toploader";
+
 import { Toaster } from "react-hot-toast";
 
 import Link from "next/link";
@@ -64,6 +66,11 @@ export default function RootLayout({
 
           {/* PAGE CONTENT CHANGES HERE */}
           <main className="space-y-6 mx-auto max-w-5xl">
+            <NextTopLoader
+              color="#0f172a"
+              height={3}
+              showSpinner={false}
+            />
             {children}
             <Toaster position="top-right" />
           </main>
