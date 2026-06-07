@@ -67,10 +67,29 @@ export function TravelersAdditionFormSection({
             index={index}
             remove={() => remove(index)}
             register={register}
-            errors={errors?.travelers?.[index]} 
+            errors={errors?.travelers?.[index]}
           />
         ))}
       </div>
+
+      {(fields.length > 1) && (
+        <div className="flex justify-end py-5">
+          <button
+            type="button"
+            onClick={() =>
+              append({
+                name: "",
+                birth_date: "",
+                additionals: [],
+              })
+            }
+            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md cursor-pointer"
+          >
+            <span className="text-lg">+</span>
+            Adicionar
+          </button>
+        </div>
+      )}
     </div>
   );
 }
