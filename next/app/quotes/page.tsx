@@ -53,7 +53,7 @@ export default function QuotesPage() {
 
   useEffect(() => {
     const cursor = searchParams.get("cursor") ?? undefined;
-    const selectedZone = searchParams.get("travel_zone") ?? "";
+    const selectedZone = (searchParams.get("travel_zone"))?.toLocaleLowerCase() ?? "";
 
     loadQuotes(cursor, selectedZone);
   }, [searchParams]);
@@ -88,6 +88,47 @@ export default function QuotesPage() {
         >
           + Nova Cotação
         </Link>
+      </div>
+
+      <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="flex flex-col">
+          <label className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            Destino
+          </label>
+
+          <select
+            value={searchParams.get("travel_zone") ?? ""}
+            onChange={(e) =>
+              updateFilters({
+                travel_zone: e.target.value || undefined,
+                cursor: undefined, 
+              })
+            }
+            className="rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+          >
+            <option value="">Todos</option>
+
+            {TravelZoneEnum.options.map((zone) => (
+              <option key={zone} value={zone}>
+                {zone}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {(searchParams.get("travel_zone") || searchParams.get("cursor")) && (
+          <button
+            onClick={() =>
+              updateFilters({
+                travel_zone: undefined,
+                cursor: undefined,
+              })
+            }
+            className="mt-5 rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          >
+            Limpar filtros
+          </button>
+        )}
       </div>
 
       {/* Table */}

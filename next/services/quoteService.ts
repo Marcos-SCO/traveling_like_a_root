@@ -36,14 +36,16 @@ export async function createQuote(
 
 export async function getQuotes(cursor?: string, travelZone?: string) {
     try {
-        const { data } = await api.get<QuoteListResponse>("/quotes", {
-            params: cursor ? { cursor } : undefined,
-            ...(travelZone && { travel_zone: travelZone })
-        });
+        const params = new URLSearchParams();
+
+        if (cursor) params.set("cursor", cursor);
+        if (travelZone) params.set("travel_zone", travelZone);
+
+        const response = await api.get(`/quotes?${params.toString()}`);
 
         return {
             success: true,
-            data,
+            data: response.data,
         } as const;
 
     } catch (error: any) {
