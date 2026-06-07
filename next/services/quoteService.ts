@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios";
-import { QuoteResponse } from "@/types/quote";
+import { QuoteListResponse, QuoteResponse } from "@/types/quote";
 import { QuoteFormValues } from "@/schemas/quoteSchema";
 
 type QuoteServiceResult =
@@ -31,5 +31,34 @@ export async function createQuote(
             success: false,
             error: "Erro inesperado ao criar cotação",
         };
+    }
+}
+
+export async function getQuotes(cursor?: string) {
+    try {
+        const { data } = await api.get<QuoteListResponse>("/quotes", {
+            params: cursor ? { cursor } : undefined,
+        });
+
+        return {
+            success: true,
+            data,
+        } as const;
+
+    } catch (error: any) {
+        
+        if (error?.response) {
+            return {
+                success: false,
+                error:
+                    error.response.data?.message || "Erro ao buscar cotações",
+                status: error.response.status,
+            } as const;
+        }
+
+        return {
+            success: false,
+            error: "Erro inesperado ao buscar cotações",
+        } as const;
     }
 }

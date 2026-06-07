@@ -26,7 +26,7 @@ class QuoteController extends Controller
             ->when($request->travel_zone, function ($query) use ($request) {
                 $query->where('travel_zone', $request->travel_zone);
             })
-            ->orderBy('id')
+            ->orderByDesc('created_at')
             ->cursorPaginate(
                 perPage: 10,
                 cursor: $request->cursor
