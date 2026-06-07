@@ -21,12 +21,18 @@ export function TravelersAdditionFormSection({
   register,
 }: TravelersAdditionFormSectionProps) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-lg font-semibold">Viajantes</h2>
+          <div className="mb-2 flex items-center gap-2">
+            <span className="text-xl">👥</span>
 
-          <p className="text-sm text-slate-500">Adicione todos os viajantes</p>
+            <h2 className="text-xl font-bold text-slate-900">Viajantes</h2>
+          </div>
+
+          <p className="text-sm text-slate-500">
+            Adicione todos os participantes desta viagem.
+          </p>
         </div>
 
         <button
@@ -38,13 +44,14 @@ export function TravelersAdditionFormSection({
               additionals: [],
             })
           }
-          className="cursor-pointer rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+          className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md cursor-pointer"
         >
-          + Adicionar
+          <span className="text-lg">+</span>
+          Novo Viajante
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-5">
         {fields.map((field, index) => (
           <TravelerForm
             key={field.id}
