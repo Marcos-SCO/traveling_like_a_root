@@ -45,11 +45,11 @@ export default function QuoteForm() {
     <div className="max-w-4xl mx-auto p-6">
       <div className="mb-10 space-y-3">
         <span className="inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">
-          Seguro Viagem
+          Assegure agora
         </span>
 
         <h3 className="text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
-          Inicie sua cotação de viagem
+          Sua cotação de viagem
         </h3>
 
         <p className="max-w-2xl text-lg text-slate-600">
