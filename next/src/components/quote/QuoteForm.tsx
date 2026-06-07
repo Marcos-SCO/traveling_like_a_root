@@ -43,7 +43,9 @@ export default function QuoteForm() {
   const { submitQuote } = useQuote();
 
   const onSubmit = async (data: QuoteFormValues) => {
-    await submitQuote(data);
+    await submitQuote(data, () => {
+      form.reset();
+    });
   };
 
   return (
