@@ -7,15 +7,11 @@ export default function Home() {
     <div className="p-6">
       {/* Content */}
       <div className="space-y-6">
-        {/* Form Card */}
+        {/* <QuoteResult /> */}
+
         <section className="rounded-xl bg-white p-6 shadow-sm border border-slate-200">
           <QuoteForm />
         </section>
-
-        {/* Result Card */}
-        {/* <section className="rounded-xl bg-white p-6 shadow-sm border border-slate-200">
-            <QuoteResult />
-          </section> */}
       </div>
     </div>
   );
