@@ -42,7 +42,7 @@ export default function QuotesPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 p-6">
+    <div className="mx-auto max-w-6xl space-y-6 py-6 px-2">
       {/* Header */}
       <div className="flex items-end justify-between">
         <div>
@@ -56,7 +56,7 @@ export default function QuotesPage() {
         </div>
 
         <Link
-          href="/quotes/create"
+          href="/"
           className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-slate-800"
         >
           + Nova Cotação
