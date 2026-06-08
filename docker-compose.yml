@@ -1,0 +1,71 @@
+services:
+  laravel:
+    build:
+      context: .
+      dockerfile: Dockerfile.Laravel
+      args:
+        user: traveling_like_a_root
+        uid: 1000
+    environment:
+      DB_HOST: ${DOCKER_DB_HOST}
+      DB_PORT: ${DOCKER_MYSQL_PORT}
+      DB_DATABASE: ${DOCKER_MYSQL_DATABASE}
+      DB_USERNAME: ${DOCKER_MYSQL_USER}
+      DB_PASSWORD: ${DOCKER_MYSQL_PASSWORD}
+    working_dir: /laravel
+    volumes:
+      - ./laravel:/laravel
+    expose:
+      - "9000"
+    depends_on:
+      - mysql
+    networks:
+      - traveling_like_a_root
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "${DOCKER_WEBSERVER_PORT}:80"
+    volumes:
+      - ./laravel:/laravel
+      - ./docker/nginx:/etc/nginx/conf.d/
+    depends_on:
+      - laravel
+    networks:
+      - traveling_like_a_root
+
+  mysql:
+    image: mariadb:12.3.2
+    restart: always
+    environment:
+      # MYSQL_USER: ${DOCKER_MYSQL_USER}
+      # MYSQL_PASSWORD: ${DOCKER_MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DOCKER_MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${DOCKER_MYSQL_DATABASE}
+    volumes:
+      - ./docker/mysql/volumes/mysql:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    ports:
+      - "${DOCKER_EXTERNAL_MYSQL_PORT}:3306"
+    networks:
+      - traveling_like_a_root
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - "${DOCKER_PHP_MY_ADMIN_PORT}:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: ${DOCKER_MYSQL_USER}
+      PMA_PASSWORD: ${DOCKER_MYSQL_PASSWORD}
+      UPLOAD_LIMIT: 5G
+    depends_on:
+      - mysql
+    networks:
+      - traveling_like_a_root
+
+networks:
+  traveling_like_a_root:
+    name: traveling_like_a_root
+    driver: bridge

@@ -1,0 +1,24 @@
+FROM php:8.5-fpm-alpine
+
+ARG user
+ARG uid
+
+WORKDIR /laravel
+
+RUN apk add --no-cache \
+    curl unzip git bash \
+    libpng-dev oniguruma-dev \
+    autoconf g++ make
+
+RUN docker-php-ext-install pdo pdo_mysql mysqli
+
+COPY --from=composer:2.2 /usr/bin/composer /usr/local/bin/composer
+
+RUN adduser -D -u $uid $user
+
+# IMPORTANT
+RUN sed -i 's/127.0.0.1:9000/0.0.0.0:9000/' /usr/local/etc/php-fpm.d/www.conf
+
+USER $user
+
+CMD ["php-fpm"]
