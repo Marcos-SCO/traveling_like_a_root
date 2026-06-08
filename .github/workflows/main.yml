@@ -19,14 +19,14 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v6
 
-      - name: 🧰 Setup PHP & Composer
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.5'
-          tools: composer
+      # - name: 🧰 Setup PHP & Composer
+      #   uses: shivammathur/setup-php@v2
+      #   with:
+      #     php-version: '8.5'
+      #     tools: composer
 
-      - name: 📦 Install PHP dependencies
-        run: composer install --no-dev --optimize-autoloader    
+      # - name: 📦 Install PHP dependencies
+      #   run: composer install --no-dev --optimize-autoloader    
 
       # - name: 🧰 Setup Node.js
       #   uses: actions/setup-node@v3
