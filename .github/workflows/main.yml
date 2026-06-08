@@ -50,3 +50,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: ${{ secrets.SERVER_DIR }}
           local-dir: laravel/
+          protocol: ftps
