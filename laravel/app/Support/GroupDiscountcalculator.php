@@ -4,8 +4,8 @@ namespace App\Support;
 
 class GroupDiscountCalculator
 {
-    public static function percentage(int $groupSize): float
+    public static function percentageNumber(int $groupSize): float
     {
-        return $groupSize >= 5 ? 0.1 : 0;
+        return $groupSize >= 5 ? 10 : 0;
     }
 }

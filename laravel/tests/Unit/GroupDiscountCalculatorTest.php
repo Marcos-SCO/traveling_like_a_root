@@ -11,16 +11,16 @@ class GroupDiscountCalculatorTest extends TestCase
     public function test_group_discount_is_applied_for_more_than_five_travelers(): void
     {
         $discount =
-            GroupDiscountCalculator::percentage(6);
+            GroupDiscountCalculator::percentageNumber(6);
 
-        $this->assertEquals(0.10, $discount);
+        $this->assertEquals(10, $discount);
     }
     
     public function test_group_discount_not_applied_for_less_than_five_travelers(): void
     {
         $discount =
-            GroupDiscountCalculator::percentage(3);
+            GroupDiscountCalculator::percentageNumber(3);
 
-        $this->assertNotEquals(0.10, $discount);
+        $this->assertNotEquals(10, $discount);
     }
 }

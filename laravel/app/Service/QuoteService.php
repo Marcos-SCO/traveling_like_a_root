@@ -21,7 +21,7 @@ class QuoteService
         $travelers = $data['travelers'];
         $travelersCount = count($travelers);
 
-        $groupPercentageDiscount = GroupDiscountCalculator::percentage($travelersCount);
+        $groupPercentageDiscount = GroupDiscountCalculator::percentageNumber($travelersCount);
 
         $startDate = Carbon::parse($data['start_date']);
         $endDate = Carbon::parse($data['end_date']);
@@ -32,10 +32,12 @@ class QuoteService
 
         $totalGroupCost = $this->travelerQuoteCalculator->totalGroupCost($travelersCalculatedCostData);
 
-        $totalEnd = $totalGroupCost - ($totalGroupCost * $groupPercentageDiscount);
-
         $allWarningMessages =
             $this->travelerQuoteCalculator->warningMessages($travelersCalculatedCostData);
+
+        $groupPercentageCalculation = ($totalGroupCost * $groupPercentageDiscount) / 100;
+
+        $totalEnd = $totalGroupCost - $groupPercentageCalculation;
 
         return [
             'travel_zone' => $travelZone,
@@ -49,8 +51,8 @@ class QuoteService
 
             'warnings' =>  $allWarningMessages,
 
-            'discount_amount' => $groupPercentageDiscount,
-            'group_discount_percentage' => $groupPercentageDiscount * 100,
+            'discount_amount' => round($groupPercentageCalculation, 2),
+            'group_discount_percentage' => $groupPercentageDiscount,
             'total_amount' => round($totalEnd, 2),
         ];
     }
