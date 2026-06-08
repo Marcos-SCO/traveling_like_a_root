@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\DTOs\TravelerDTO;
 use Carbon\Carbon;
 use App\Enums\TravelZone;
 use App\Support\TravelerRateCalculator;
@@ -15,10 +16,10 @@ class TravelerQuoteCalculator
 {
     public function __construct() {}
 
-    public function calculateTravelerIndividualCost(array $travelerData, int $travelZoneDailyRate, \DateTimeInterface $tripStartDate, int $chargedDays): array
+    public function calculateTravelerIndividualCost(TravelerDTO $travelerData, int $travelZoneDailyRate, \DateTimeInterface $tripStartDate, int $chargedDays): array
     {
         $tripStartDate = Carbon::parse($tripStartDate);
-        $birthDate = Carbon::parse($travelerData['birth_date']);
+        $birthDate = Carbon::parse($travelerData->birthDate);
 
         $ageAtTrip = (int) round($birthDate->diffInYears($tripStartDate));
 
@@ -29,12 +30,11 @@ class TravelerQuoteCalculator
 
         $appliedAdditionalsAmount = 0;
 
-        $additionalItemsArray = $travelerData['additionals'] ?? [];
+        $additionalItemsArray = $travelerData->additionals ?? [];
         $warnings = [];
         $appliedAdditionals = [];
 
-
-        $travelerName = $travelerData['name'];
+        $travelerName = $travelerData->name;
 
         foreach ($additionalItemsArray as $additionalIdentifier) {
 
@@ -69,7 +69,7 @@ class TravelerQuoteCalculator
 
         return [
             'name' => $travelerName,
-            'birth_date' => $travelerData['birth_date'],
+            'birth_date' => $travelerData->birthDate,
             'age_at_trip' => $ageAtTrip,
             'age_multiplier' => $ageMultiplier,
             'base_amount' => $baseAmount,

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\DTOs\QuoteDTO;
 use App\Enums\TravelZone;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\QuoteIndexRequest;
@@ -61,13 +62,13 @@ class QuoteController extends Controller
 
     public function store(QuoteRequest $request)
     {
-        $calculateData = $this->quoteService->calculateTotal($request->validated());
+        $quoteDto = QuoteDTO::fromRequest($request);
+
+        $calculateData =
+            $this->quoteService->calculateTotal($quoteDto);
 
         $this->quotePersistenceService
-            ->persist(
-                $request->validated(),
-                $calculateData
-            );
+            ->persist($calculateData);
 
         $formattedCalculatedArrayResponse = $this->quoteService->formattedCalculatedArrayResponse($calculateData);
 

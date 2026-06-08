@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\DTOs\QuoteDTO;
+use App\DTOs\TravelerDTO;
 use App\Models\Traveler;
 use App\Models\Quote;
 
@@ -53,12 +55,7 @@ class QuoteSeeder extends Seeder
 
                 $selectedCoverages = $allCoverages
                     ->shuffle()
-                    ->take(
-                        rand(
-                            0,
-                            $allCoverages->count()
-                        )
-                    )
+                    ->take(rand(0, $allCoverages->count()))
                     ->pluck('value')
                     ->values()
                     ->toArray();
@@ -77,15 +74,14 @@ class QuoteSeeder extends Seeder
                 ];
             }
 
-            $calculatedData =
-                $quoteService->calculateTotal(
-                    $payload
-                );
+            $travelersDto = array_map(fn(array $traveler) => TravelerDTO::fromArray($traveler), $payload['travelers']);
 
-            $quotePersistenceService->persist(
-                $payload,
-                $calculatedData
-            );
+            $payloadQuoteDto = new QuoteDTO($payload['travel_zone'], $payload['start_date'], $payload['end_date'], $travelersDto);
+
+            $calculatedData =
+                $quoteService->calculateTotal($payloadQuoteDto);
+
+            $quotePersistenceService->persist($calculatedData);
         }
     }
 }

@@ -2,12 +2,14 @@
 
 namespace Tests\Unit;
 
+use App\DTOs\QuoteDTO;
+use App\DTOs\TravelerDTO;
 use App\Service\QuoteService;
 use Tests\TestCase;
 
 class QuoteServiceTest extends TestCase
 {
-     public function test_complete_quote_with_multiple_travelers_and_addons(): void
+    public function test_complete_quote_with_multiple_travelers_and_addons(): void
     {
         $service = app(QuoteService::class);
 
@@ -35,7 +37,11 @@ class QuoteServiceTest extends TestCase
             ],
         ];
 
-        $result = $service->calculateTotal($data);
+        $travelersDto = array_map(fn(array $traveler) => TravelerDTO::fromArray($traveler), $data['travelers']);
+
+        $quoteDto = new QuoteDTO($data['travel_zone'], $data['start_date'], $data['end_date'], $travelersDto);
+
+        $result = $service->calculateTotal($quoteDto);
 
         $this->assertEquals(11, $result['charged_days']);
 

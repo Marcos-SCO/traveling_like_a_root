@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\DTOs\QuoteDTO;
 use App\Models\Quote;
 use App\Models\Traveler;
 use App\Models\TravelerAdditional;
@@ -18,15 +19,14 @@ class QuotePersistenceService
     }
 
     public function persist(
-        array $quoteData,
         array $calculatedData
     ): void {
 
         $quote = Quote::create([
-            'travel_zone' => $quoteData['travel_zone'],
+            'travel_zone' => $calculatedData['travel_zone'],
 
-            'start_date' => $quoteData['start_date'],
-            'end_date' => $quoteData['end_date'],
+            'start_date' => $calculatedData['start_date'],
+            'end_date' => $calculatedData['end_date'],
 
             'charged_days' => $calculatedData['charged_days'],
 

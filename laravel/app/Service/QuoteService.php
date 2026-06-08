@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\DTOs\QuoteDTO;
 use Carbon\Carbon;
 use App\Enums\TravelZone;
 
@@ -14,17 +15,17 @@ class QuoteService
 {
     public function __construct(private TravelerQuoteCalculator $travelerQuoteCalculator) {}
 
-    public function calculateTotal(array $data): array
+    public function calculateTotal(QuoteDTO $data): array
     {
-        $travelZone = TravelZone::from(mb_strtolower($data['travel_zone']));
+        $travelZone = TravelZone::from(mb_strtolower($data->travelZone));
 
-        $travelers = $data['travelers'];
+        $travelers = (array) $data->travelers;
         $travelersCount = count($travelers);
 
         $groupPercentageDiscount = GroupDiscountCalculator::percentageNumber($travelersCount);
 
-        $startDate = Carbon::parse($data['start_date']);
-        $endDate = Carbon::parse($data['end_date']);
+        $startDate = Carbon::parse($data->startDate);
+        $endDate = Carbon::parse($data->endDate);
 
         $chargedDays = CalculateChargedDays::getDays($startDate, $endDate);
 
