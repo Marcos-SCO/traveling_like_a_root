@@ -18,9 +18,9 @@ enum TravelZone: string
     public function dailyRate(): float
     {
         return match ($this) {
-            self::NATIONAL => 10.00,
-            self::AMERICAS => 16.00,
-            self::EUROPE => 22.00,
+            self::NATIONAL => 10,
+            self::AMERICAS => 16,
+            self::EUROPE => 22,
         };
     }
 
