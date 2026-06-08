@@ -1,0 +1,52 @@
+on:
+  push:
+    branches:
+      - main
+
+name: 🚀 Deploy laravel api on push
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    environment: traveling-like-a-root-laravel
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: laravel
+
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
+
+      - name: 🧰 Setup PHP & Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          tools: composer
+
+      - name: 📦 Install PHP dependencies
+        run: composer install --no-dev --optimize-autoloader    
+
+      # - name: 🧰 Setup Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: "24.13.0"
+
+      # - name: 🧹 Clean old build
+      #   run: rm -rf assets/dist
+
+      # - name: 📦 Install dependencies
+      #   run: npm ci
+
+      # - name: 🔨 Build assets
+      #   run: npm run build  
+
+      - name: 📂 Upload via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.1.0
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.SERVER_DIR }}
+          local-dir: laravel/
