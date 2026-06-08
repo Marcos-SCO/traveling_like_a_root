@@ -51,3 +51,5 @@ jobs:
           server-dir: ${{ secrets.SERVER_DIR }}
           local-dir: laravel/
           protocol: ftps
+          log-level: verbose
+          dangerous-clean-slate: false
