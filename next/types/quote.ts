@@ -12,6 +12,7 @@ export interface QuoteTraveler {
 }
 
 export interface QuoteResponse {
+    quote_id: number,
     charged_days: number;
     travelers: QuoteTraveler[];
     warnings: string[];

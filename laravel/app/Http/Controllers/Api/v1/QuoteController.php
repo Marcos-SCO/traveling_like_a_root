@@ -67,11 +67,14 @@ class QuoteController extends Controller
         $calculateData =
             $this->quoteService->calculateTotal($quoteDto);
 
-        $this->quotePersistenceService
+        $quote = $this->quotePersistenceService
             ->persist($calculateData);
 
         $formattedCalculatedArrayResponse = $this->quoteService->formattedCalculatedArrayResponse($calculateData);
 
-        return response()->json($formattedCalculatedArrayResponse);
+        return response()->json(array_merge(
+            ['quote_id' => $quote->id],
+            $formattedCalculatedArrayResponse
+        ));
     }
 }

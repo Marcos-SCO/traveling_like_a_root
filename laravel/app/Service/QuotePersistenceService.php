@@ -20,7 +20,7 @@ class QuotePersistenceService
 
     public function persist(
         array $calculatedData
-    ): void {
+    ): Quote {
 
         $quote = Quote::create([
             'travel_zone' => $calculatedData['travel_zone'],
@@ -58,7 +58,7 @@ class QuotePersistenceService
 
                 'subtotal_amount' => $travelerData['subtotal'],
             ]);
-            
+
 
             foreach (
                 $travelerData['applied_additionals'] ?? []
@@ -72,5 +72,7 @@ class QuotePersistenceService
                 ]);
             }
         }
+
+        return $quote;
     }
 }

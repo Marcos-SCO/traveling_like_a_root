@@ -23,15 +23,13 @@ export function useQuote() {
             }
 
             // setQuote(result.data);
-            
             reset?.();
             
             toast.success("Cotação gerada com sucesso!");
-            setTimeout(() => {
-                router.push("/quotes");
-            }, 1000);
+            
+            // setTimeout(() => { router.push("/quotes");}, 1000);
 
-            // router.push(`/quotes/${result.id}`);
+            router.push(`/quotes/${result.data.quote_id}`);
         } finally {
             setLoading(false);
         }
