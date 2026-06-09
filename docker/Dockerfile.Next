@@ -1,0 +1,5 @@
+FROM node:24-alpine
+
+WORKDIR /next
+
+EXPOSE 3000
