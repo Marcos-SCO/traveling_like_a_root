@@ -14,7 +14,7 @@ interface QuotesTableProps {
 
 export default function QuotesTable({ quotes }: QuotesTableProps) {
   return (
-    <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg shadow-slate-100">
+    <div className="overflow-x-scroll lg:overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg shadow-slate-100">
       <table className="w-full">
         <thead>
           <tr className="border-b border-slate-200 bg-slate-50">
