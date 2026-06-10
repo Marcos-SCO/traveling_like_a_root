@@ -15,7 +15,7 @@ export default function QuotesPagination({
   updateFilters,
 }: QuotesPaginationProps) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between flex-wrap gap-5">
       <button
         disabled={loading || !searchParams.get("cursor")}
         onClick={() => updateFilters({ cursor: undefined })}

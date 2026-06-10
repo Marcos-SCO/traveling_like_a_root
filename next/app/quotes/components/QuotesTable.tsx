@@ -89,10 +89,10 @@ export default function QuotesTable({ quotes }: QuotesTableProps) {
                 })}
               </td>
 
-              <td className="px-7 py-5">
+              <td className="py-5 px-2 lg:px-7">
                 <Link
                   href={`/quotes/${quote.id}`}
-                  className="inline-flex items-center rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+                  className="inline-flex items-center rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-800 text-center"
                 >
                   Ver detalhes
                 </Link>
