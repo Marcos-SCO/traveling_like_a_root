@@ -24,7 +24,7 @@ export function TravelersAdditionFormSection({
   errors,
 }: TravelersAdditionFormSectionProps) {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="rounded-3xl border border-slate-200 bg-white py-5 p-3 md:p-8 shadow-sm">
       {/* Header */}
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>

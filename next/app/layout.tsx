@@ -24,7 +24,7 @@ export default function RootLayout({
       className={`h-full antialiased`}
     >
       <body className="min-h-screen antialiased">
-        <div className="bg-slate-100 px-6 py-10 min-h-screen">
+        <div className="bg-slate-100 px-2 md:px-6 py-10 min-h-screen">
           
           <Header/>
 

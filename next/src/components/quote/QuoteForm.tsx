@@ -49,13 +49,13 @@ export default function QuoteForm() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="mb-10 space-y-3">
+    <div className="max-w-4xl mx-auto  md:p-6">
+      <div className="mb-10 p-2 space-y-3">
         <span className="inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">
           Assegure agora
         </span>
 
-        <h3 className="text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
+        <h3 className="text-3xl font-bold tracking-tight text-slate-900 md:text-5xl">
           Sua cotação de viagem
         </h3>
 
@@ -80,7 +80,7 @@ export default function QuoteForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="rounded-xl bg-gray-600 px-6 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-gray-700 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="rounded-xl bg-gray-600 px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-gray-700 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {isSubmitting ? "Calculando..." : "Calcular Cotação"}
           </button>

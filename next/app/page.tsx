@@ -4,13 +4,13 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="p-6">
+    <div className="md:p-6">
       {/* Content */}
       <div className="space-y-6">
 
         {/* <QuoteResult /> */}
 
-        <section className="rounded-xl bg-white p-6 shadow-sm border border-slate-200">
+        <section className="rounded-xl bg-white p-3 md:p-6 shadow-sm border border-slate-200">
           <QuoteForm />
         </section>
       </div>

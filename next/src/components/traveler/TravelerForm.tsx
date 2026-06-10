@@ -34,14 +34,14 @@ export default function TravelerForm({
 
   return (
     <div
-      className={`rounded-2xl border bg-white p-6 shadow-sm transition
-        ${hasTravelerError ? "border-red-200" : "border-slate-200"}
+      className={`rounded-2xl sm:border bg-white p-0 sm:p-6 sm:shadow-sm transition
+        ${hasTravelerError ? "sm:border-red-200" : "sm:border-slate-200"}
       `}
     >
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
+          <div className="flex h-8 w-10 md:h-10 md:w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
             {index + 1}
           </div>
 
@@ -56,16 +56,16 @@ export default function TravelerForm({
           </div>
         </div>
 
-        {index > 0 && (
+        {index > 0 ? (
           <button
             type="button"
             onClick={remove}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition cursor-pointer"
+            className="flex h-8 w-10 md:h-9 md:w-9 items-center justify-center rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition cursor-pointer"
             aria-label="Remover viajante"
           >
             ✕
           </button>
-        )}
+        ) : (<div className="w-10 md:w-9"></div>)}
       </div>
 
       {/* Personal Information */}
