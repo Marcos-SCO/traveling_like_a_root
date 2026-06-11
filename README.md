@@ -66,13 +66,13 @@ Estrutura do Projeto
 cp docker/.env.example docker/.env
 ```
 
-- #### Na pasta `laravel`, copie rquivo:
+- #### Na pasta `laravel`, copie arquivo:
 
 ```bash
 cp laravel/.env.example laravel/.env
 ```
 
-- #### Na pasta `next`, copie rquivo:
+- #### Na pasta `next`, copie arquivo:
 
 ```bash
 cp next/.example.env next/.env
@@ -198,8 +198,6 @@ Toda a lógica de negócio foi centralizada em serviços dedicados, permitindo r
 As zonas de viagem, adicionais e faixas de cálculo foram implementadas utilizando Enums para evitar uso de strings mágicas e garantir maior segurança durante o desenvolvimento.
 
 ### Estratégia de cálculo
-
-
 
 A lógica de precificação foi implementada seguindo integralmente a ordem de cálculo especificada no desafio, incluindo regras de período mínimo, adicionais, desconto de grupo e arredondamento.
 
