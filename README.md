@@ -96,20 +96,24 @@ docker compose -f docker/docker-compose.yml up -d --build
 
 ---
 
-### 4. Gere as migrations e seeders do Laravel
+### 4. Migrations/seeders e composer no Laravel
 
 Dá raiz do projeto:
 
 ```bash
-cd docker && docker-compose exec laravel php artisan migrate --seed
+docker-compose -f docker/docker-compose.yml exec laravel composer install
 ```
 
-### 6. Inicie o Next
+```bash
+docker-compose -f docker/docker-compose.yml exec laravel php artisan migrate --seed
+```
+
+### 6. Instale as depedências com o npm e inicie o Next
 
 Dá raiz do projeto:
 
 ```bash
-cd next && npm run dev
+(cd next && npm install && npm run dev)
 ```
 
 ### 7. Rode os testes
