@@ -60,7 +60,7 @@ class QuoteServiceTest extends TestCase
         );
 
         $this->assertEquals(
-            852,
+            852.5,
             $result['total_amount']
         );
     }

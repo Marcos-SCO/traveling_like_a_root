@@ -93,9 +93,9 @@ class TravelerQuoteCalculator
         );
     }
 
-    public function totalGroupCost(array $travelersCost): int
+    public function totalGroupCost(array $travelersCost): float
     {
-        return array_sum(array_map(fn($travelerCost) => $travelerCost['subtotal'], $travelersCost));
+        return (float) array_sum(array_map(fn($travelerCost) => $travelerCost['subtotal'], $travelersCost));
     }
 
     public function travelersFormattedData(array $travelersCost): array

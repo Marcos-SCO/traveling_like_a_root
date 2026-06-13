@@ -38,7 +38,7 @@ class QuoteService
 
         $groupPercentageCalculation = ($totalGroupCost * $groupPercentageDiscount) / 100;
 
-        $totalEnd = $totalGroupCost - $groupPercentageCalculation;
+        $totalAmount = $totalGroupCost - $groupPercentageCalculation;
 
         return [
             'travel_zone' => $travelZone,
@@ -54,7 +54,7 @@ class QuoteService
 
             'discount_amount' => round($groupPercentageCalculation, 2),
             'group_discount_percentage' => $groupPercentageDiscount,
-            'total_amount' => round($totalEnd, 2),
+            'total_amount' => round($totalAmount, 2),
         ];
     }
 
