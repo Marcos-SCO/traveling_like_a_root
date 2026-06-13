@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TravelerWarnings extends Model
+class TravelerWarning extends Model
 {
     protected $fillable = [
         'quote_id',

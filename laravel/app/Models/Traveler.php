@@ -33,6 +33,6 @@ class Traveler extends Model
     
     public function warnings()
     {
-        return $this->hasMany(TravelerWarnings::class);
+        return $this->hasMany(TravelerWarning::class);
     }
 }

@@ -54,8 +54,10 @@ class QuoteController extends Controller
 
     public function show(int $id)
     {
-        $quote = Quote::with('travelers.additionals')
-            ->findOrFail($id);
+        $quote = Quote::with([
+            'travelers.additionals',
+            'travelers.warnings' => fn ($query) => $query->where('quote_id', $id),
+        ])->findOrFail($id);
 
         return response()->json(new QuoteResource($quote));
     }

@@ -31,6 +31,10 @@ class QuoteResource extends JsonResource
                                 'amount' => $add->amount,
                             ];
                         }),
+                        
+                        'warnings' => $traveler->warnings->map(fn($warning) => [
+                            'message' => $warning->warning_message,
+                        ]),
                     ];
                 });
             }),
