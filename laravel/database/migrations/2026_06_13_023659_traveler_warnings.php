@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('traveler_warnings', function (Blueprint $table) {
             $table->id();
+            
+            // $table->foreignId('quote_id')->constrained('quotes')->cascadeOnDelete();
+            $table->foreignId('quote_id');
 
-            $table->foreignId('traveler_id')->constrained()->onDelete('cascade');
+            $table->foreignId('traveler_id')->constrained('travelers')->cascadeOnDelete();
 
             $table->string('warning_message');
         });
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-         Schema::dropIfExists('traveler_warnings');
+        Schema::dropIfExists('traveler_warnings');
     }
 };

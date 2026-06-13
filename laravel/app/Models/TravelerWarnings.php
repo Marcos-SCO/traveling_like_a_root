@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class TravelerWarnings extends Model
 {
     protected $fillable = [
+        'quote_id',
         'traveler_id',
         'warning_message',
     ];
+
+    public $timestamps = false;
 
     public function traveler()
     {

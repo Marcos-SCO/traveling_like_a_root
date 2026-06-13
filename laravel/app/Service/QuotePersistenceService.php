@@ -78,6 +78,7 @@ class QuotePersistenceService
                 as $warningItemMessage
             ) {
                 TravelerWarnings::create([
+                    'quote_id' => $quote->id,
                     'traveler_id' => $traveler->id,
                     'warning_message' => $warningItemMessage,
                 ]);
