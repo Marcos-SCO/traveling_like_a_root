@@ -7,6 +7,7 @@ use App\Models\Quote;
 use App\Models\Traveler;
 use App\Models\TravelerAdditional;
 use App\Enums\AdditionalCoverage;
+use App\Models\TravelerWarnings;
 
 class QuotePersistenceService
 {
@@ -69,6 +70,16 @@ class QuotePersistenceService
 
                     'coverage_code' => $additionalItem['coverage_code'],
                     'amount' => $additionalItem['amount'],
+                ]);
+            }
+            
+            foreach (
+                $travelerData['warnings'] ?? []
+                as $warningItemMessage
+            ) {
+                TravelerWarnings::create([
+                    'traveler_id' => $traveler->id,
+                    'warning_message' => $warningItemMessage,
                 ]);
             }
         }
