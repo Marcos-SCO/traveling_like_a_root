@@ -17,10 +17,6 @@ return new class extends Migration
             $table->foreignId('traveler_id')->constrained()->onDelete('cascade');
 
             $table->string('warning_message');
-
-            $table->timestamps();
-
-            $table->unique(['traveler_id', 'warning_message']);
         });
     }
 
