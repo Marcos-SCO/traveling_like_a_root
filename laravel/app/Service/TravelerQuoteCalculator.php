@@ -16,7 +16,7 @@ class TravelerQuoteCalculator
 {
     public function __construct() {}
 
-    public function calculateTravelerIndividualCost(TravelerDTO $travelerData, int $travelZoneDailyRate, \DateTimeInterface $tripStartDate, int $chargedDays): array
+    public function calculateTravelerIndividualCost(TravelerDTO $travelerData,  $travelZone, \DateTimeInterface $tripStartDate, int $chargedDays): array
     {
         $tripStartDate = Carbon::parse($tripStartDate);
         $birthDate = Carbon::parse($travelerData->birthDate);
@@ -25,7 +25,10 @@ class TravelerQuoteCalculator
 
         $ageMultiplier = TravelerRateCalculator::ageMultiplier($birthDate, $tripStartDate);
 
-        $baseAmount = $travelZoneDailyRate * $chargedDays;
+        $travelZoneRate = $travelZone->dailyRate();
+
+
+        $baseAmount = $travelZoneRate * $chargedDays;
         $subTotal = $baseAmount * $ageMultiplier;
 
         $appliedAdditionalsAmount = 0;
@@ -57,6 +60,12 @@ class TravelerQuoteCalculator
 
             $additionalAmount = AdditionalsRate::cost($additionalIdentifier, $subTotal, $chargedDays);
 
+
+            $isAPetEligibleAdditional = ($travelZone->value === TravelZone::NATIONAL->value) && AdditionalCoverage::PET->value == $additionalIdentifier;
+
+            if ($isAPetEligibleAdditional) $additionalAmount += 80;
+            
+
             $appliedAdditionalsAmount += $additionalAmount;
 
             $appliedAdditionals[] = [
@@ -82,10 +91,13 @@ class TravelerQuoteCalculator
 
     public function travelersCost(array $travelers, TravelZone $travelZone, \DateTimeInterface $startDate, int $chargedDays): array
     {
+
+
+        // $travelZone->dailyRate(),
         return array_map(
             fn($traveler) => $this->calculateTravelerIndividualCost(
                 $traveler,
-                $travelZone->dailyRate(),
+                $travelZone,
                 $startDate,
                 $chargedDays
             ),

@@ -6,6 +6,7 @@ enum AdditionalCoverage: string
 {
     case ADVENTURE_SPORTS = 'esportes_aventura';
     case BAGGAGE = 'bagagem';
+    case PET = 'pet';
 
     public static function hasValue(?string $value): bool
     {
